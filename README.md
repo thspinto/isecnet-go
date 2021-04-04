@@ -10,6 +10,14 @@ ISECnet is a proprietary protocol used by Intelbras in their alarm central commu
 
 ## Testing
 
+
+* `make unit-test`: unit tests
+
+* `make lint`: linter
+
+* `make test`: run all
+
+
 ## Contributing
 
 ## References

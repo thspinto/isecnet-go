@@ -1,5 +1,7 @@
+test: lint unit-test
+
 lint:
 	golangci-lint run
 
-test:
+unit-test:
 	go test ./...
