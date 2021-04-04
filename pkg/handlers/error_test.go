@@ -1,4 +1,4 @@
-package error
+package handlers
 
 import (
 	"bytes"
@@ -13,7 +13,7 @@ import (
 func Test_checkErrorWithError(t *testing.T) {
 	var buf bytes.Buffer
 	log.SetOutput(&buf)
-	err := checkError("error description", errors.New("error message"))
+	err := CheckError("error description", errors.New("error message"))
 	assert.True(t, err, "Should return true")
 	assert.Contains(t, buf.String(), "error description", "Missing error description")
 	assert.Contains(t, buf.String(), "error message", "Missing error message")
@@ -22,7 +22,7 @@ func Test_checkErrorWithError(t *testing.T) {
 func Test_checkErrorWithoutError(t *testing.T) {
 	var buf bytes.Buffer
 	log.SetOutput(&buf)
-	err := checkError("test", nil)
+	err := CheckError("test", nil)
 	assert.False(t, err, "Should return false")
 	assert.Empty(t, buf, "Unexpected error logging")
 }

@@ -1,10 +1,10 @@
-package error
+package handlers
 
 import (
 	log "github.com/sirupsen/logrus"
 )
 
-func checkError(description string, err error) bool {
+func CheckError(description string, err error) bool {
 	b := (err != nil)
 	if b {
 		log.WithFields(log.Fields{
