@@ -1,4 +1,4 @@
-package protocol
+package client
 
 const (
 	FRAME_DELIMITER = 0x21

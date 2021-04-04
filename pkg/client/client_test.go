@@ -1,4 +1,4 @@
-package network
+package client
 
 import (
 	"net"
@@ -7,15 +7,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_NewTCPClient(t *testing.T) {
+func Test_NewClient(t *testing.T) {
 	ln, err := net.Listen("tcp", ":12345")
 	assert.NoError(t, err)
-	NewTCPClient("localhost", "12345")
+	NewClient("localhost", "12345")
 	_, err = ln.Accept()
 	assert.NoError(t, err)
 }
 
-func Test_Command(t *testing.T) {
+func Test_command(t *testing.T) {
 	client, server := net.Pipe()
 	// This is an example of a get partial status command
 	expectedByServer := []byte{0x08, 0xe9, 0x21, 0x31, 0x32, 0x33, 0x34, 0x5a, 0x21, 0x4b}
@@ -30,8 +30,8 @@ func Test_Command(t *testing.T) {
 		assert.NoError(t, err)
 	}()
 
-	c := TCPClient{
+	c := Client{
 		conn: client,
 	}
-	assert.Equal(t, expectedByClient[1:], c.Command(expectedByServer))
+	assert.Equal(t, expectedByClient[1:], c.command(expectedByServer))
 }

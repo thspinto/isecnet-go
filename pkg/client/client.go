@@ -1,4 +1,4 @@
-package network
+package client
 
 import (
 	"io"
@@ -7,26 +7,27 @@ import (
 	"github.com/thspinto/isecnet-go/pkg/handlers"
 )
 
-type TCPClient struct {
-	host string
-	port string
-	conn net.Conn
+type Client struct {
+	host     string
+	port     string
+	conn     net.Conn
+	password string
 }
 
-// NewTCPClient returns client for communicating with the server through a tcp connection
-func NewTCPClient(host, port string) TCPClient {
+// NewClient returns client for communicating with the server through a tcp connection
+func NewClient(host, port string) Client {
 	conn, err := net.Dial("tcp", host+":"+port)
 	handlers.CheckError("tcp connection failed", err)
 
-	return TCPClient{
+	return Client{
 		host: host,
 		port: port,
 		conn: conn,
 	}
 }
 
-// Command dispatches the command and return the response
-func (c *TCPClient) Command(b []byte) []byte {
+// command dispatches the command and return the response
+func (c *Client) command(b []byte) []byte {
 	_, err := c.conn.Write(b)
 	handlers.CheckError("failed writing to stream", err)
 
