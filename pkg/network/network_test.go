@@ -23,9 +23,11 @@ func Test_Command(t *testing.T) {
 	expectedByClient := []byte{0x02, 0xe2, 0xe1}
 	go func() {
 		in := make([]byte, 10)
-		server.Read(in)
+		_, err := server.Read(in)
+		assert.NoError(t, err)
 		assert.Equal(t, expectedByServer, in)
-		server.Write(expectedByClient)
+		_, err = server.Write(expectedByClient)
+		assert.NoError(t, err)
 	}()
 
 	c := TCPClient{
