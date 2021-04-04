@@ -1,6 +1,6 @@
 # ISECnet-go
 
-This an go SDK that wraps Intelbras' protocol in a gRCP API.
+This an go SDK implementation for Intelbras' ISECNet protocol.
 
 ## ISEcnet
 

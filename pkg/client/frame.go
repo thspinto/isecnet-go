@@ -5,6 +5,12 @@ const (
 	COMMAND         = 0xE9
 )
 
+// ShortResponseFrame is the representation of a short response from the server
+type ShortResponseFrame struct {
+	ack         bool
+	description string
+}
+
 // ISECNetMobileFrame is the data frame in the ISECNet frame
 type ISECNetFrame struct {
 	command byte
@@ -45,4 +51,48 @@ func (frame *ISECNetFrame) checksum() byte {
 	sum = sum ^ 0xFF // two's complement
 
 	return sum
+}
+
+// Gets the translation for a short response
+func GetShortResponse(b []byte) ShortResponseFrame {
+	frames := map[byte]ShortResponseFrame{
+		0xfe: ShortResponseFrame{
+			ack:         true,
+			description: "Command successfully received",
+		},
+		0xe0: ShortResponseFrame{
+			ack:         false,
+			description: "Invalid packet format",
+		},
+		0xe1: ShortResponseFrame{
+			ack:         false,
+			description: "Invalid password",
+		},
+		0xe2: ShortResponseFrame{
+			ack:         false,
+			description: "Invalid command",
+		},
+		0xe3: ShortResponseFrame{
+			ack:         false,
+			description: "Central not partitioned",
+		},
+		0xe4: ShortResponseFrame{
+			ack:         false,
+			description: "Open zones",
+		},
+		0xe5: ShortResponseFrame{
+			ack:         false,
+			description: "Deprecated command",
+		},
+		0xe6: ShortResponseFrame{
+			ack:         false,
+			description: "User does not have permission to bypass",
+		},
+		0xe7: ShortResponseFrame{
+			ack:         false,
+			description: "User does not have permission to deactivate",
+		},
+	}
+
+	return frames[b[1]]
 }
