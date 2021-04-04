@@ -36,7 +36,7 @@ func (frame *ISECNetMobileFrame) bytes() []byte {
 func (frame *ISECNetFrame) bytes() []byte {
 	data := frame.data.bytes()
 	size := len(data) + 1
-	bytes := []byte{byte(size), COMMAND}
+	bytes := []byte{byte(size), frame.command}
 	bytes = append(bytes, data...)
 	bytes = append(bytes, frame.checksum())
 	return bytes
