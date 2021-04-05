@@ -39,9 +39,17 @@ var partialStatusCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Zone", "Anulated", "Open", "Violated"})
+		table.SetHeader([]string{"Zone", "Anulated", "Open", "Violated", "LowBattery", "Tamper", "Short Circuit"})
 		for i, z := range status.Zones {
-			table.Append([]string{"Zone " + fmt.Sprint(i+1), strconv.FormatBool(z.Anulated), strconv.FormatBool(z.Open), strconv.FormatBool(z.Anulated)})
+			table.Append([]string{
+				"Zone " + fmt.Sprint(i+1),
+				strconv.FormatBool(z.Anulated),
+				strconv.FormatBool(z.Open),
+				strconv.FormatBool(z.Anulated),
+				strconv.FormatBool(z.LowBattery),
+				strconv.FormatBool(z.Tamper),
+				strconv.FormatBool(z.ShortCircuit),
+			})
 		}
 		table.Render()
 	},

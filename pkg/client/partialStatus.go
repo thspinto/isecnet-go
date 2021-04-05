@@ -87,10 +87,21 @@ func parseZones(b []byte) []Zone {
 
 	for i := 0; i < int(len(zones)/8); i++ {
 		for j := 0; j < 8; j++ {
-			sensor := (i * 8) + j
-			zones[sensor].Open = (b[i+1]>>j)&0x01 == 0x01
-			zones[sensor].Violated = (b[i+9]>>j)&0x01 == 0x01
-			zones[sensor].Anulated = (b[i+17]>>j)&0x01 == 0x01
+			zone := (i * 8) + j
+			zones[zone].Open = (b[i+1]>>j)&0x01 == 0x01
+			zones[zone].Violated = (b[i+7]>>j)&0x01 == 0x01
+			zones[zone].Anulated = (b[i+13]>>j)&0x01 == 0x01
+			if zone <= 39 {
+				// for battery status there are only 40 zones
+				zones[zone].LowBattery = (b[i+39]>>j)&0x01 == 0x01
+			}
+		}
+		if i <= 8 {
+			// tamper and short circuit are only for zones 1 to 8 and 11 to 18
+			zones[i].Tamper = (b[34]>>i)&0x01 == 0x01
+			zones[i].ShortCircuit = (b[36]>>i)&0x01 == 0x01
+			zones[i+10].Tamper = (b[35]>>i)&0x01 == 0x01
+			zones[i+10].ShortCircuit = (b[37]>>i)&0x01 == 0x01
 		}
 	}
 	return zones
