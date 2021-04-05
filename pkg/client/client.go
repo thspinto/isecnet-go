@@ -4,6 +4,7 @@ import (
 	"io"
 	"net"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/thspinto/isecnet-go/pkg/handlers"
 )
 
@@ -15,14 +16,19 @@ type Client struct {
 }
 
 // NewClient returns client for communicating with the server through a tcp connection
-func NewClient(host, port string) Client {
+func NewClient(host, port, password string) Client {
+	log.WithFields(log.Fields{
+		"address": host + ":" + port,
+	}).Info("Connecting...")
+
 	conn, err := net.Dial("tcp", host+":"+port)
 	handlers.CheckError("tcp connection failed", err)
 
 	return Client{
-		host: host,
-		port: port,
-		conn: conn,
+		host:     host,
+		port:     port,
+		conn:     conn,
+		password: password,
 	}
 }
 

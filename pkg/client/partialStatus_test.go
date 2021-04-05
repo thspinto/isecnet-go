@@ -45,11 +45,11 @@ func Test_Client_parceZones(t *testing.T) {
 
 	response := parseZones(data)
 
-	assert.False(t, response[0].anulated)
-	assert.False(t, response[0].open)
-	assert.False(t, response[0].violated)
+	assert.False(t, response[0].Anulated)
+	assert.False(t, response[0].Open)
+	assert.False(t, response[0].Violated)
 
-	assert.True(t, response[9].anulated)
-	assert.True(t, response[9].open)
-	assert.True(t, response[9].violated)
+	assert.True(t, response[9].Anulated)
+	assert.True(t, response[9].Open)
+	assert.True(t, response[9].Violated)
 }

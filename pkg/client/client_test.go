@@ -10,7 +10,7 @@ import (
 func Test_NewClient(t *testing.T) {
 	ln, err := net.Listen("tcp", ":12345")
 	assert.NoError(t, err)
-	NewClient("localhost", "12345")
+	NewClient("localhost", "12345", "1234")
 	_, err = ln.Accept()
 	assert.NoError(t, err)
 }

@@ -52,10 +52,17 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.isecnet-go.yaml)")
+	rootCmd.PersistentFlags().String("host", "localhost", "Host or IP of the central")
+	rootCmd.PersistentFlags().String("port", "9009", "Central port")
+	rootCmd.PersistentFlags().String("password", "1234", "Central password")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	if err := viper.BindPFlags(rootCmd.PersistentFlags()); err != nil {
+		panic(err)
+	}
 }
 
 // initConfig reads in config file and ENV variables if set.

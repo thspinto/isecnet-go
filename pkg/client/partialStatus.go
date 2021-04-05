@@ -6,57 +6,57 @@ import (
 )
 
 type Zone struct {
-	violated     bool
-	anulated     bool
-	open         bool
-	lowBattery   bool // not implemented
-	shortCircuit bool // not implemented
-	tamper       bool // not implemented
+	Violated     bool
+	Anulated     bool
+	Open         bool
+	LowBattery   bool // not implemented
+	ShortCircuit bool // not implemented
+	Tamper       bool // not implemented
 }
 
 type PGM struct {
-	enabled bool
+	Enabled bool
 }
 
 type Keyboard struct {
-	issueWarn bool // keyboard has some issue
-	tamper    bool
+	IssueWarn bool // keyboard has some issue
+	Tamper    bool
 }
 type Central struct {
-	model                     string
-	firmware                  string
-	siren                     Siren
-	battery                   Battery
-	activated                 bool
-	alerting                  bool
-	issueWarn                 bool // central has some issue
-	externalPowerFault        bool // central loss external power source
-	externalAuxOverload       bool // external auxiliary exit overload
-	phoneLineCut              bool
-	eventCommunicationFailure bool
+	Model                     string
+	Firmware                  string
+	Siren                     Siren
+	Battery                   Battery
+	Activated                 bool
+	Alerting                  bool
+	IssueWarn                 bool // central has some issue
+	ExternalPowerFault        bool // central loss external power source
+	ExternalAuxOverload       bool // external auxiliary exit overload
+	PhoneLineCut              bool
+	EventCommunicationFailure bool
 }
 
 type Siren struct {
-	enabled      bool
-	wireCut      bool
-	shortCircuit bool
+	Enabled      bool
+	WireCut      bool
+	ShortCircuit bool
 }
 
 type Battery struct {
-	low           bool
-	shortCircuit  bool
-	level         int
-	bypassEnabled bool
-	bypassBlink   bool
+	Low           bool
+	ShortCircuit  bool
+	Level         int
+	BypassEnabled bool
+	BypassBlink   bool
 }
 
 type StatusResponse struct {
-	time             time.Time
-	zones            []Zone
-	keyboards        []Keyboard
+	Time             time.Time
+	Zones            []Zone
+	Keyboards        []Keyboard
 	Central          Central
-	pgm              PGM
-	partitionEnabled bool
+	PGM              PGM
+	PartitionEnabled bool
 }
 
 // GetPartialStatus get the partial status from the Central
@@ -75,7 +75,11 @@ func (c *Client) GetPartialStatus() (*StatusResponse, error) {
 		return nil, errors.New(GetShortResponse(response).description)
 	}
 
-	return nil, nil
+	status := StatusResponse{
+		Zones: parseZones(response),
+	}
+
+	return &status, nil
 }
 
 func parseZones(b []byte) []Zone {
@@ -84,9 +88,9 @@ func parseZones(b []byte) []Zone {
 	for i := 0; i < int(len(zones)/8); i++ {
 		for j := 0; j < 8; j++ {
 			sensor := (i * 8) + j
-			zones[sensor].open = (b[i+1]>>j)&0x01 == 0x01
-			zones[sensor].violated = (b[i+9]>>j)&0x01 == 0x01
-			zones[sensor].anulated = (b[i+17]>>j)&0x01 == 0x01
+			zones[sensor].Open = (b[i+1]>>j)&0x01 == 0x01
+			zones[sensor].Violated = (b[i+9]>>j)&0x01 == 0x01
+			zones[sensor].Anulated = (b[i+17]>>j)&0x01 == 0x01
 		}
 	}
 	return zones
