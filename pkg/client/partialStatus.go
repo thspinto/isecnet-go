@@ -2,6 +2,7 @@ package client
 
 import (
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -18,6 +19,10 @@ type PGM struct {
 	Enabled bool
 }
 
+type Partition struct {
+	Enabled bool
+}
+
 type Keyboard struct {
 	IssueWarn bool // keyboard has some issue
 	Tamper    bool
@@ -25,7 +30,6 @@ type Keyboard struct {
 type Central struct {
 	Model                     string
 	Firmware                  string
-	Siren                     Siren
 	Battery                   Battery
 	Activated                 bool
 	Alerting                  bool
@@ -34,6 +38,7 @@ type Central struct {
 	ExternalAuxOverload       bool // external auxiliary exit overload
 	PhoneLineCut              bool
 	EventCommunicationFailure bool
+	Siren                     Siren
 }
 
 type Siren struct {
@@ -43,11 +48,9 @@ type Siren struct {
 }
 
 type Battery struct {
-	Low           bool
-	ShortCircuit  bool
-	Level         int
-	BypassEnabled bool
-	BypassBlink   bool
+	Low              bool
+	AbsentOrInverted bool
+	ShortCircuit     bool
 }
 
 type StatusResponse struct {
@@ -55,7 +58,8 @@ type StatusResponse struct {
 	Zones            []Zone
 	Keyboards        []Keyboard
 	Central          Central
-	PGM              PGM
+	PGMs             []PGM
+	Partitions       []Partition
 	PartitionEnabled bool
 }
 
@@ -76,7 +80,8 @@ func (c *Client) GetPartialStatus() (*StatusResponse, error) {
 	}
 
 	status := StatusResponse{
-		Zones: parseZones(response),
+		Zones:   parseZones(response),
+		Central: parseCentral(response),
 	}
 
 	return &status, nil
@@ -105,4 +110,36 @@ func parseZones(b []byte) []Zone {
 		}
 	}
 	return zones
+}
+
+func parseCentral(b []byte) Central {
+	c := Central{}
+
+	if b[19] == 0x1e {
+		c.Model = "AMT2018 E/EG"
+	}
+	c.Firmware = fmt.Sprint(b[20])
+	if b[23] == 0x08 {
+		c.Activated = true
+	} else if b[23] == 0x44 || b[23] == 0x04 {
+		c.Alerting = true
+	} else if b[23] == 0x11 {
+		c.IssueWarn = true
+	}
+
+	c.ExternalPowerFault = (b[29]>>0&0x01 == 0x01)
+	c.Battery = Battery{
+		Low:              (b[29]>>1&0x01 == 0x01),
+		AbsentOrInverted: (b[29]>>2&0x01 == 0x01),
+		ShortCircuit:     (b[29]>>3&0x01 == 0x01),
+	}
+	c.ExternalAuxOverload = (b[29]>>4&0x01 == 0x01)
+	c.Siren = Siren{
+		Enabled:      (b[23] == 0x02) || (b[38]>>2&0x01 == 0x01),
+		WireCut:      (b[33]>>0&0x01 == 0x01),
+		ShortCircuit: (b[33]>>1&0x01 == 0x01),
+	}
+	c.PhoneLineCut = (b[33]>>2&0x01 == 0x01)
+	c.EventCommunicationFailure = (b[33]>>3&0x01 == 0x01)
+	return c
 }
