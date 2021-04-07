@@ -62,3 +62,11 @@ INFO[0000] Conecting...                                  address="localhost:9009
 
 * https://github.com/jrbenito/isec-wireshark
 * https://github.com/felipealmeida/amt2018
+
+
+
+1000 1000
+0100 0100
+0000 0100
+0000 0010
+0001 0001

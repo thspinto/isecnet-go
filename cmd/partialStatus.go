@@ -52,6 +52,19 @@ var partialStatusCmd = &cobra.Command{
 			})
 		}
 		table.Render()
+
+		table = tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"Keyboard", "Issue", "Tamper", "Receiver Issue"})
+		for i, k := range status.Keyboards {
+			table.Append([]string{
+				"Keyboard " + fmt.Sprint(i+1),
+				strconv.FormatBool(k.Issue),
+				strconv.FormatBool(k.Tamper),
+				strconv.FormatBool(k.ReceiverIssue),
+			})
+		}
+		table.Render()
+
 		fmt.Printf("%+v\n", status.Central)
 		fmt.Println("YYYY-MM-DD: ", status.Date)
 	},

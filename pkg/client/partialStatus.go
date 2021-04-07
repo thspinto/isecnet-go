@@ -24,8 +24,9 @@ type Partition struct {
 }
 
 type Keyboard struct {
-	IssueWarn bool // keyboard has some issue
-	Tamper    bool
+	ReceiverIssue bool
+	Issue         bool // keyboard has some issue
+	Tamper        bool
 }
 type Central struct {
 	Model                     string
@@ -80,12 +81,25 @@ func (c *Client) GetPartialStatus() (*StatusResponse, error) {
 	}
 
 	status := StatusResponse{
-		Zones:   parseZones(response),
-		Central: parseCentral(response),
-		Date:    parseDate(response),
+		Zones:     parseZones(response),
+		Central:   parseCentral(response),
+		Date:      parseDate(response),
+		Keyboards: parseKeyboard(response),
 	}
 
 	return &status, nil
+}
+
+func parseKeyboard(b []byte) []Keyboard {
+	keyboards := make([]Keyboard, 4)
+
+	for i := range keyboards {
+		keyboards[i].Issue = (b[30]>>i)&0x01 == 0x01
+		keyboards[i].ReceiverIssue = (b[30]>>i+4)&0x01 == 0x01
+		keyboards[i].Tamper = (b[32]>>(i+4))&0x01 == 0x01
+	}
+
+	return keyboards
 }
 
 func parseZones(b []byte) []Zone {
