@@ -54,7 +54,7 @@ type Battery struct {
 }
 
 type StatusResponse struct {
-	Time             time.Time
+	Date             time.Time
 	Zones            []Zone
 	Keyboards        []Keyboard
 	Central          Central
@@ -82,6 +82,7 @@ func (c *Client) GetPartialStatus() (*StatusResponse, error) {
 	status := StatusResponse{
 		Zones:   parseZones(response),
 		Central: parseCentral(response),
+		Date:    parseDate(response),
 	}
 
 	return &status, nil
@@ -112,13 +113,26 @@ func parseZones(b []byte) []Zone {
 	return zones
 }
 
+func parseDate(b []byte) time.Time {
+	return time.Date(
+		2000+int((b[28]>>4*10)+b[28]&0x0f),
+		time.Month((b[27]>>4*10)+b[27]&0x0f),
+		int((b[26]>>4*10)+b[26]&0x0f),
+		int((b[24]>>4*10)+b[24]&0x0f),
+		int((b[25]>>4*10)+b[25]&0x0f),
+		0,
+		0,
+		time.Local,
+	)
+}
+
 func parseCentral(b []byte) Central {
 	c := Central{}
 
 	if b[19] == 0x1e {
 		c.Model = "AMT2018 E/EG"
 	}
-	c.Firmware = fmt.Sprint(b[20])
+	c.Firmware = fmt.Sprintf("%v.%v", b[20]>>4, b[20]&0x0f)
 	if b[23] == 0x08 {
 		c.Activated = true
 	} else if b[23] == 0x44 || b[23] == 0x04 {

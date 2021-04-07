@@ -3,6 +3,7 @@ package client
 import (
 	"net"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -141,8 +142,6 @@ func Test_Client_parceCentralZoneAlerting2(t *testing.T) {
 }
 
 func Test_Client_parceCentralSirenOn(t *testing.T) {
-	// Zone 1: violated false, anulated false, open false, shortCircuit false, lowBattery false, tamper false
-	// Zone 10 violated true, anulated true, open true, shortCircuit true, lowBattery true, tamper true
 	data := []byte{
 		0xe9,
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -169,8 +168,6 @@ func Test_Client_parceCentralSirenOn(t *testing.T) {
 }
 
 func Test_Client_parceCentralIssueOnCentral(t *testing.T) {
-	// Zone 1: violated false, anulated false, open false, shortCircuit false, lowBattery false, tamper false
-	// Zone 10 violated true, anulated true, open true, shortCircuit true, lowBattery true, tamper true
 	data := []byte{
 		0xe9,
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -198,8 +195,6 @@ func Test_Client_parceCentralIssueOnCentral(t *testing.T) {
 }
 
 func Test_Client_parceCentralModelVersion(t *testing.T) {
-	// Zone 1: violated false, anulated false, open false, shortCircuit false, lowBattery false, tamper false
-	// Zone 10 violated true, anulated true, open true, shortCircuit true, lowBattery true, tamper true
 	data := []byte{
 		0xe9,
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -212,5 +207,20 @@ func Test_Client_parceCentralModelVersion(t *testing.T) {
 	response := parseCentral(data)
 
 	assert.Equal(t, "AMT2018 E/EG", response.Model)
-	assert.Equal(t, "49", response.Firmware)
+	assert.Equal(t, "3.1", response.Firmware)
+}
+
+func Test_Client_parceCentralDate(t *testing.T) {
+	data := []byte{
+		0xe9,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1e, 0x31,
+		0x00, 0x00, 0x04, 0x12, 0x12, 0x12, 0x12, 0x12, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00,
+		0x40}
+
+	response := parseDate(data)
+
+	assert.Equal(t, time.Date(2012, time.December, 12, 12, 12, 0, 0, time.Local), response)
 }

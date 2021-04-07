@@ -53,6 +53,7 @@ var partialStatusCmd = &cobra.Command{
 		}
 		table.Render()
 		fmt.Printf("%+v\n", status.Central)
+		fmt.Println("YYYY-MM-DD: ", status.Date)
 	},
 }
 
