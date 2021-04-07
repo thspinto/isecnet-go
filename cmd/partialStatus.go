@@ -65,8 +65,29 @@ var partialStatusCmd = &cobra.Command{
 		}
 		table.Render()
 
-		fmt.Printf("%+v\n", status.Central)
+		table = tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"Partition", "Enabled"})
+		for i, p := range status.Partitions {
+			table.Append([]string{
+				"Partition " + fmt.Sprint(i+1),
+				strconv.FormatBool(p.Enabled),
+			})
+		}
+		table.Render()
+
 		fmt.Println("YYYY-MM-DD: ", status.Date)
+		fmt.Printf("Model: %s, Firmware: %s\n", status.Central.Model, status.Central.Firmware)
+		fmt.Printf("Central \n Activated: %v\n Alerting: %v\n IssueWarning: %v\n",
+			status.Central.Activated,
+			status.Central.Alerting,
+			status.Central.IssueWarn)
+		fmt.Printf("Siren\n Enabled: %v\n WireCut: %v\n ShortCircuit %v\n",
+			status.Central.Siren.Enabled,
+			status.Central.Siren.WireCut,
+			status.Central.Battery.ShortCircuit)
+		fmt.Printf("External Power Failure: %v\nPhoneLineCut: %v\n",
+			status.Central.ExternalPowerFault,
+			status.Central.PhoneLineCut)
 	},
 }
 

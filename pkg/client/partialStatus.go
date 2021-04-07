@@ -81,13 +81,24 @@ func (c *Client) GetPartialStatus() (*StatusResponse, error) {
 	}
 
 	status := StatusResponse{
-		Zones:     parseZones(response),
-		Central:   parseCentral(response),
-		Date:      parseDate(response),
-		Keyboards: parseKeyboard(response),
+		Zones:      parseZones(response),
+		Central:    parseCentral(response),
+		Date:       parseDate(response),
+		Keyboards:  parseKeyboard(response),
+		Partitions: parsePartitions(response),
 	}
 
 	return &status, nil
+}
+
+func parsePartitions(b []byte) []Partition {
+	partitions := make([]Partition, 2)
+
+	for i := range partitions {
+		partitions[i].Enabled = (b[22]>>i)&0x01 == 0x01
+	}
+
+	return partitions
 }
 
 func parseKeyboard(b []byte) []Keyboard {
