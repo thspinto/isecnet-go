@@ -133,13 +133,9 @@ func parseCentral(b []byte) Central {
 		c.Model = "AMT2018 E/EG"
 	}
 	c.Firmware = fmt.Sprintf("%v.%v", b[20]>>4, b[20]&0x0f)
-	if b[23] == 0x08 {
-		c.Activated = true
-	} else if b[23] == 0x44 || b[23] == 0x04 {
-		c.Alerting = true
-	} else if b[23] == 0x11 {
-		c.IssueWarn = true
-	}
+	c.Activated = (b[23]>>3&0x01 == 0x01)
+	c.Alerting = (b[23]>>2&0x01 == 0x01)
+	c.IssueWarn = (b[23]>>0&0x01 == 0x01)
 
 	c.ExternalPowerFault = (b[29]>>0&0x01 == 0x01)
 	c.Battery = Battery{
@@ -149,7 +145,7 @@ func parseCentral(b []byte) Central {
 	}
 	c.ExternalAuxOverload = (b[29]>>4&0x01 == 0x01)
 	c.Siren = Siren{
-		Enabled:      (b[23] == 0x02) || (b[38]>>2&0x01 == 0x01),
+		Enabled:      (b[23]>>1 == 0x01) || (b[38]>>2&0x01 == 0x01),
 		WireCut:      (b[33]>>0&0x01 == 0x01),
 		ShortCircuit: (b[33]>>1&0x01 == 0x01),
 	}
