@@ -51,7 +51,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.isecnet-go.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "./.isecnet-go.yaml", "config file (default is ./.isecnet-go.yaml)")
 	rootCmd.PersistentFlags().String("host", "localhost", "Host or IP of the central")
 	rootCmd.PersistentFlags().String("port", "9009", "Central port")
 	rootCmd.PersistentFlags().String("password", "1234", "Central password")

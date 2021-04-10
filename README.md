@@ -13,6 +13,7 @@ ISECnet is a proprietary protocol used by Intelbras in their alarm central commu
 ```
   help          Help about any command
   partialStatus Get partial central status
+  zones         Get Zone status
 ```
 
 ### Flags
@@ -47,6 +48,29 @@ INFO[0000] Conecting...                                  address="localhost:9009
 (...)
 ```
 
+## Zones description
+
+You can configure the zone description in `.isecnet-go.yaml` to see meaningful names and only zones in use. See `.isecnet-go..yaml.example` for example:
+
+```yaml
+zones:
+  - id: 1
+    name: Front Door
+    description: Front dor magnetic sensor
+
+```
+
+```bash
+➜  isecnet-go git:(main) ✗ go run . --password 1234 zones
+Using config file: ./.isecnet-go.yaml
+INFO[0000] Connecting...                                 address="localhost:9009"
++------------+----------+-------+----------+------------+--------+---------------+
+|    ZONE    | ANULATED | OPEN  | VIOLATED | LOWBATTERY | TAMPER | SHORT CIRCUIT |
++------------+----------+-------+----------+------------+--------+---------------+
+| Front Door | false    | false | false    | false      | false  | false         |
++------------+----------+-------+----------+------------+--------+---------------+
+```
+
 ## Testing
 
 * `make unit-test`: unit tests
@@ -62,11 +86,3 @@ INFO[0000] Conecting...                                  address="localhost:9009
 
 * https://github.com/jrbenito/isec-wireshark
 * https://github.com/felipealmeida/amt2018
-
-
-
-1000 1000
-0100 0100
-0000 0100
-0000 0010
-0001 0001

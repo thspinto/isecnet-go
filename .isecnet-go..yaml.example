@@ -1,0 +1,4 @@
+zones:
+  - id: 1
+    name: Front Door
+    description: Front dor magnetic sensor
