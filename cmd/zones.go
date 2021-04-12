@@ -20,6 +20,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	ui "github.com/gizak/termui/v3"
 	"github.com/gizak/termui/v3/widgets"
@@ -66,13 +67,29 @@ func watchStatus(c client.Client, zonesDesc []ZonesDescription) {
 		log.Fatalf("failed to initialize termui: %v", err)
 	}
 	defer ui.Close()
+	updateUI(c, zonesDesc)
 
+	tick := time.Tick(2 * time.Second)
+	uiEvents := ui.PollEvents()
+	for {
+		select {
+		case e := <-uiEvents:
+			switch e.ID {
+			case "q", "<C-c>":
+				return
+			}
+		case <-tick:
+			updateUI(c, zonesDesc)
+		}
+	}
+}
+
+func updateUI(c client.Client, zonesDesc []ZonesDescription) {
 	status, err := c.GetPartialStatus()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
 	zones := status.Zones
 
 	for i, z := range zonesDesc {
@@ -95,15 +112,6 @@ func watchStatus(c client.Client, zonesDesc []ZonesDescription) {
 			p.BorderStyle.Fg = ui.ColorWhite
 		}
 		ui.Render(p)
-	}
-
-	uiEvents := ui.PollEvents()
-	for {
-		e := <-uiEvents
-		switch e.ID {
-		case "q", "<C-c>":
-			return
-		}
 	}
 }
 
