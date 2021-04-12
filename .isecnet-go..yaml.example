@@ -1,4 +1,33 @@
 zones:
   - id: 1
-    name: Front Door
-    description: Front dor magnetic sensor
+    name: Kitchen
+
+  - id: 2
+    name: Ballroom
+
+  - id: 3
+    name: Conservatory
+
+  - id: 4
+    name: Dining Room
+
+  - id: 5
+    name: Cellar
+
+  - id: 6
+    name: Billiard Room
+
+  - id: 7
+    name: Library
+
+  - id: 12
+    name: Study
+
+  - id: 13
+    name: Hall
+
+  - id: 14
+    name: Lounge
+
+  - id: 18
+    name: Secret Passage

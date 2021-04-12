@@ -29,24 +29,7 @@ ISECnet is a proprietary protocol used by Intelbras in their alarm central commu
 
 ### Example
 
-```
-go run . --host localhost --password 1234 partialStatus
-
-INFO[0000] Conecting...                                  address="localhost:9009"
-+---------+----------+-------+----------+
-|  ZONE   | ANULATED | OPEN  | VIOLATED |
-+---------+----------+-------+----------+
-| Zone 1  | false    | true  | false    |
-| Zone 2  | false    | false | false    |
-| Zone 3  | false    | false | false    |
-| Zone 4  | false    | false | false    |
-| Zone 5  | false    | true  | false    |
-| Zone 6  | false    | false | false    |
-| Zone 7  | false    | false | false    |
-| Zone 8  | false    | false | false    |
-| Zone 9  | false    | false | false    |
-(...)
-```
+![Example of the zones and zones -w command running in the terminal](./img/zones.gif)
 
 ## Zones description
 
