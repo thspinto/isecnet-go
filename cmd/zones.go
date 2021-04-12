@@ -17,9 +17,12 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 
+	ui "github.com/gizak/termui/v3"
+	"github.com/gizak/termui/v3/widgets"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -44,22 +47,79 @@ var zonesCmd = &cobra.Command{
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client := client.NewClient(viper.GetString("host"), viper.GetString("port"), viper.GetString("password"))
-		status, err := client.GetPartialStatus()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
 
 		var zonesDesc []ZonesDescription
-		err = viper.UnmarshalKey("zones", &zonesDesc)
+		err := viper.UnmarshalKey("zones", &zonesDesc)
 		handlers.CheckError("unable to decode into struct", err)
 
-		if len(zonesDesc) > 0 {
-			showConfiguredZones(zonesDesc, status.Zones)
+		if viper.GetBool("watch") {
+			watchStatus(client, zonesDesc)
 		} else {
-			showAllZones(status.Zones)
+			printZones(client, zonesDesc)
 		}
+
 	},
+}
+
+func watchStatus(c client.Client, zonesDesc []ZonesDescription) {
+	if err := ui.Init(); err != nil {
+		log.Fatalf("failed to initialize termui: %v", err)
+	}
+	defer ui.Close()
+
+	status, err := c.GetPartialStatus()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	zones := status.Zones
+
+	for i, z := range zonesDesc {
+		p := widgets.NewParagraph()
+		p.SetRect(0+(15*int(i/3)), 0+(5*(i%3)), 15+(15*int(i/3)), 5+(5*(i%3)))
+		p.BorderStyle.Fg = ui.ColorGreen
+		p.TitleStyle.Bg = ui.ColorClear
+		p.Text = z.Name
+
+		if zones[z.Id-1].Open {
+			p.Title = "Open"
+			p.BorderStyle.Fg = ui.ColorCyan
+		}
+		if zones[z.Id-1].Violated {
+			p.TitleStyle.Bg = ui.ColorRed
+			p.BorderStyle.Fg = ui.ColorRed
+		}
+		if zones[z.Id-1].Anulated {
+			p.Title = "Anulated"
+			p.BorderStyle.Fg = ui.ColorWhite
+		}
+		ui.Render(p)
+	}
+
+	uiEvents := ui.PollEvents()
+	for {
+		e := <-uiEvents
+		switch e.ID {
+		case "q", "<C-c>":
+			return
+		}
+	}
+}
+
+func printZones(c client.Client, zonesDesc []ZonesDescription) {
+	status, err := c.GetPartialStatus()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if len(zonesDesc) > 0 {
+		showConfiguredZones(zonesDesc, status.Zones)
+	} else {
+		showAllZones(status.Zones)
+	}
+
 }
 
 func showConfiguredZones(zoneDesc []ZonesDescription, zones []client.Zone) {
@@ -96,7 +156,6 @@ func showAllZones(zones []client.Zone) {
 		})
 	}
 	table.Render()
-
 }
 
 func init() {
@@ -111,4 +170,8 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// zonesCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	zonesCmd.Flags().BoolP("watch", "w", false, "Watch Zone Status")
+	if err := viper.BindPFlags(zonesCmd.LocalFlags()); err != nil {
+		panic(err)
+	}
 }

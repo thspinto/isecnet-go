@@ -79,6 +79,8 @@ INFO[0000] Connecting...                                 address="localhost:9009
 
 * `make test`: run all
 
+* `make mock-server`: starts the mock server
+
 
 ## Contributing
 

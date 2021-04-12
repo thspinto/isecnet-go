@@ -56,39 +56,39 @@ func (frame *ISECNetFrame) checksum() byte {
 // Gets the translation for a short response
 func GetShortResponse(b []byte) ShortResponseFrame {
 	frames := map[byte]ShortResponseFrame{
-		0xfe: ShortResponseFrame{
+		0xfe: {
 			ack:         true,
 			description: "Command successfully received",
 		},
-		0xe0: ShortResponseFrame{
+		0xe0: {
 			ack:         false,
 			description: "Invalid packet format",
 		},
-		0xe1: ShortResponseFrame{
+		0xe1: {
 			ack:         false,
 			description: "Invalid password",
 		},
-		0xe2: ShortResponseFrame{
+		0xe2: {
 			ack:         false,
 			description: "Invalid command",
 		},
-		0xe3: ShortResponseFrame{
+		0xe3: {
 			ack:         false,
 			description: "Central not partitioned",
 		},
-		0xe4: ShortResponseFrame{
+		0xe4: {
 			ack:         false,
 			description: "Open zones",
 		},
-		0xe5: ShortResponseFrame{
+		0xe5: {
 			ack:         false,
 			description: "Deprecated command",
 		},
-		0xe6: ShortResponseFrame{
+		0xe6: {
 			ack:         false,
 			description: "User does not have permission to bypass",
 		},
-		0xe7: ShortResponseFrame{
+		0xe7: {
 			ack:         false,
 			description: "User does not have permission to deactivate",
 		},

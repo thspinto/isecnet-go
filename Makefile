@@ -5,3 +5,6 @@ lint:
 
 unit-test:
 	go test ./...
+
+mock-server:
+	$(MAKE) -C mockServer run
