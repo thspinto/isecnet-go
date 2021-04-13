@@ -30,6 +30,7 @@ ISECnet is a proprietary protocol used by Intelbras in their alarm central commu
 ### Example
 
 ![Example of the zones and zones -w command running in the terminal](./img/zones.gif)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fthspinto%2Fisecnet-go.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fthspinto%2Fisecnet-go?ref=badge_shield)
 
 ## Zones description
 
@@ -71,3 +72,7 @@ INFO[0000] Connecting...                                 address="localhost:9009
 
 * https://github.com/jrbenito/isec-wireshark
 * https://github.com/felipealmeida/amt2018
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fthspinto%2Fisecnet-go.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fthspinto%2Fisecnet-go?ref=badge_large)
