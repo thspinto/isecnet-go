@@ -36,7 +36,8 @@ func Test_InvalidPasswordResponse(t *testing.T) {
 
 	conn, err := net.Dial("tcp", "localhost:9009")
 	assert.NoError(t, err)
-	conn.Write(getPartialStatus)
+	err := conn.Write(getPartialStatus)
+	assert.NoError(t, err)
 	response, err := readResponse(conn)
 	assert.NoError(t, err)
 	assert.Equal(t, expectedResponse, response)
@@ -50,7 +51,8 @@ func Test_InvalidPacketResponse(t *testing.T) {
 
 	conn, err := net.Dial("tcp", "localhost:9009")
 	assert.NoError(t, err)
-	conn.Write(getPartialStatus)
+	err := conn.Write(getPartialStatus)
+	assert.NoError(t, err)
 	response, err := readResponse(conn)
 	assert.NoError(t, err)
 	assert.Equal(t, invalidPasswordResponse, response)
@@ -64,7 +66,8 @@ func Test_InvalidCommandResponse(t *testing.T) {
 
 	conn, err := net.Dial("tcp", "localhost:9009")
 	assert.NoError(t, err)
-	conn.Write(getPartialStatus)
+	err := conn.Write(getPartialStatus)
+	assert.NoError(t, err)
 	response, err := readResponse(conn)
 	assert.NoError(t, err)
 	assert.Equal(t, expectedResponse, response)
@@ -76,7 +79,8 @@ func Test_PartialStatusResponse(t *testing.T) {
 
 	conn, err := net.Dial("tcp", "localhost:9009")
 	assert.NoError(t, err)
-	conn.Write(getPartialStatus)
+	err := conn.Write(getPartialStatus)
+	assert.NoError(t, err)
 	response, err := readResponse(conn)
 	assert.NoError(t, err)
 	assert.True(t, len(response) > 4)
