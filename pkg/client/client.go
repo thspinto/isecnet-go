@@ -1,6 +1,7 @@
 package client
 
 import (
+	"fmt"
 	"io"
 	"net"
 
@@ -41,8 +42,11 @@ func (c *Client) command(b []byte) []byte {
 	_, err = io.ReadFull(c.conn, sizeBuf)
 	handlers.CheckError("failed reading response size", err)
 	size := int64(sizeBuf[0])
+	log.WithFields(log.Fields{
+		"size": fmt.Sprintf("%x", size),
+	}).Debug("Response Size")
 
-	buf := make([]byte, size)
+	buf := make([]byte, size+1)
 	_, err = io.ReadFull(c.conn, buf)
 	handlers.CheckError("failed reading response", err)
 

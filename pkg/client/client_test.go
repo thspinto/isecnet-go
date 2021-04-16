@@ -20,7 +20,7 @@ func Test_command(t *testing.T) {
 	// This is an example of a get partial status command
 	expectedByServer := []byte{0x08, 0xe9, 0x21, 0x31, 0x32, 0x33, 0x34, 0x5a, 0x21, 0x40}
 	// This is an example of a invalid password response
-	expectedByClient := []byte{0x02, 0xe9, 0xe1}
+	expectedByClient := []byte{0x02, 0xe9, 0xe1, 0xf5}
 	go func() {
 		in := make([]byte, 10)
 		_, err := server.Read(in)

@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type Zone struct {
@@ -75,8 +77,10 @@ func (c *Client) GetPartialStatus() (*StatusResponse, error) {
 	}
 
 	response := c.command(request.bytes())
-
-	if len(response) <= 2 {
+	log.WithFields(log.Fields{
+		"response": fmt.Sprintf("%x", response),
+	}).Debug("Partial Status Response")
+	if len(response) <= 3 {
 		return nil, errors.New(GetShortResponse(response).description)
 	}
 
