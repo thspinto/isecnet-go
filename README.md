@@ -1,14 +1,14 @@
-# ISECnet-go
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fthspinto%2Fisecnet-go.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fthspinto%2Fisecnet-go?ref=badge_shield)
 
 This an go SDK implementation for Intelbras' ISECNet protocol.
 
-## ISEcnet
+# ISEcnet
 
 ISECnet is a proprietary protocol used by Intelbras in their alarm central communication.
 
-## Usage
+# Usage
 
-### Available Commands
+## Available Commands
 
 ```
   help          Help about any command
@@ -16,7 +16,7 @@ ISECnet is a proprietary protocol used by Intelbras in their alarm central commu
   zones         Get Zone status
 ```
 
-### Flags
+## Flags
 
 ```
       --config string     config file (default is $HOME/.isecnet-go.yaml)
@@ -27,11 +27,11 @@ ISECnet is a proprietary protocol used by Intelbras in their alarm central commu
   -t, --toggle            Help message for toggle
 ```
 
-### Example
+## Example
 
 ![Example of the zones and zones -w command running in the terminal](./img/zones.gif)
 
-## Zones description
+# Zones description
 
 You can configure the zone description in `.isecnet-go.yaml` to see meaningful names and only zones in use. See `.isecnet-go..yaml.example` for example:
 
@@ -54,7 +54,7 @@ INFO[0000] Connecting...                                 address="localhost:9009
 +------------+----------+-------+----------+------------+--------+---------------+
 ```
 
-## Testing
+# Testing
 
 * `make unit-test`: unit tests
 
@@ -65,9 +65,10 @@ INFO[0000] Connecting...                                 address="localhost:9009
 * `make mock-server`: starts the mock server
 
 
-## Contributing
-
-## References
+# References
 
 * https://github.com/jrbenito/isec-wireshark
 * https://github.com/felipealmeida/amt2018
+
+# License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fthspinto%2Fisecnet-go.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fthspinto%2Fisecnet-go?ref=badge_large)
