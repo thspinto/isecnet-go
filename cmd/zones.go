@@ -139,7 +139,7 @@ func showConfiguredZones(zoneDesc []ZonesDescription, zones []client.Zone) {
 			z.Name,
 			strconv.FormatBool(zones[z.Id-1].Anulated),
 			strconv.FormatBool(zones[z.Id-1].Open),
-			strconv.FormatBool(zones[z.Id-1].Anulated),
+			strconv.FormatBool(zones[z.Id-1].Violated),
 			strconv.FormatBool(zones[z.Id-1].LowBattery),
 			strconv.FormatBool(zones[z.Id-1].Tamper),
 			strconv.FormatBool(zones[z.Id-1].ShortCircuit),
