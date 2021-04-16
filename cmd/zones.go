@@ -99,17 +99,17 @@ func updateUI(c client.Client, zonesDesc []ZonesDescription) {
 		p.TitleStyle.Bg = ui.ColorClear
 		p.Text = z.Name
 
-		if zones[z.Id-1].Open {
+		switch {
+		case zones[z.Id-1].Open:
 			p.Title = "Open"
 			p.BorderStyle.Fg = ui.ColorCyan
-		}
-		if zones[z.Id-1].Violated {
-			p.TitleStyle.Bg = ui.ColorRed
+		case zones[z.Id-1].Violated:
+			p.Title = "Violated"
 			p.BorderStyle.Fg = ui.ColorRed
-		}
-		if zones[z.Id-1].Anulated {
+		case zones[z.Id-1].Anulated:
 			p.Title = "Anulated"
 			p.BorderStyle.Fg = ui.ColorWhite
+
 		}
 		ui.Render(p)
 	}
