@@ -21,9 +21,9 @@ ISECnet is a proprietary protocol used by Intelbras in their alarm central commu
 ```
       --config string     config file (default is $HOME/.isecnet-go.yaml)
   -h, --help              help for isecnet-go
-      --host string       Host or IP of the central (default "localhost")
-      --password string   Central password (default "1234")
-      --port string       Central port (default "9009")
+      --alarm_host string       Host or IP of the alarm central (default "localhost")
+      --alarm_password string   Alarm central password (default "1234")
+      --alarm_port string       Alarm central port (default "9009")
   -t, --toggle            Help message for toggle
 ```
 
@@ -40,7 +40,6 @@ zones:
   - id: 1
     name: Front Door
     description: Front dor magnetic sensor
-
 ```
 
 ```bash
