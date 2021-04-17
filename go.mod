@@ -11,9 +11,10 @@ require (
 	github.com/sirupsen/logrus v1.2.0
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.7.1
-	github.com/stretchr/testify v1.4.0
-	github.com/tidwall/evio v1.0.8
-	google.golang.org/grpc v1.21.1
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0 // indirect
+	github.com/stretchr/testify v1.5.1
+	golang.org/x/net v0.0.0-20210415231046-e915ea6b2b7d // indirect
+	golang.org/x/sys v0.0.0-20210415045647-66c3f260301c // indirect
+	google.golang.org/genproto v0.0.0-20210416161957-9910b6c460de // indirect
+	google.golang.org/grpc v1.37.0
 	google.golang.org/protobuf v1.26.0
 )

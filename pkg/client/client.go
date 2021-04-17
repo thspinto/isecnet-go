@@ -16,30 +16,40 @@ type Client struct {
 }
 
 // NewClient returns client for communicating with the server through a tcp connection
-func NewClient(host, port, password string) (client *Client, err error) {
+func NewClient(host, port, password string) (client *Client) {
 	log.WithFields(log.Fields{
 		"address": host + ":" + port,
 	}).Info("Connecting...")
 
-	conn, err := net.Dial("tcp", host+":"+port)
-	if err != nil {
-		log.WithFields(log.Fields{
-			"err": err,
-		}).Error("Failed to establish TCP connection")
-		return
-	}
 	client = &Client{
 		host:     host,
 		port:     port,
-		conn:     conn,
 		password: password,
 	}
 
 	return
 }
 
+func (c *Client) connect() (err error) {
+	conn, err := net.Dial("tcp", c.host+":"+c.port)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"err": err,
+		}).Error("Failed to establish TCP connection")
+		return
+	}
+	c.conn = conn
+	return
+}
+
 // command dispatches the command and return the response
 func (c *Client) command(b []byte) (response []byte, err error) {
+	if c.conn == nil {
+		if err = c.connect(); err == nil {
+			return
+		}
+	}
+
 	_, err = c.conn.Write(b)
 	if err != nil {
 		log.WithFields(log.Fields{

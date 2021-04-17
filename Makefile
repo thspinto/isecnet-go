@@ -1,4 +1,4 @@
-test: lint
+test: lint unit-test
 .PHONY: lint
 lint:
 	golangci-lint run
@@ -13,5 +13,4 @@ mock-server:
 
 .PHONY: proto
 proto:
-	protoc --go-grpc_out=internal/genproto/zones -I api/protobuf api/protobuf/zones.proto
-	protoc --go_out=internal/genproto/zones -I api/protobuf api/protobuf/zones.proto
+	protoc --go_out=internal/genproto/zones --go-grpc_out=internal/genproto/zones -I api/protobuf api/protobuf/zones.proto

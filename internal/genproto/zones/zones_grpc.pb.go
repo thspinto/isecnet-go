@@ -15,86 +15,86 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// UsersServiceClient is the client API for UsersService service.
+// ZoneServiceClient is the client API for ZoneService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UsersServiceClient interface {
+type ZoneServiceClient interface {
 	GetZones(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetZonesResponse, error)
 }
 
-type usersServiceClient struct {
+type zoneServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewUsersServiceClient(cc grpc.ClientConnInterface) UsersServiceClient {
-	return &usersServiceClient{cc}
+func NewZoneServiceClient(cc grpc.ClientConnInterface) ZoneServiceClient {
+	return &zoneServiceClient{cc}
 }
 
-func (c *usersServiceClient) GetZones(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetZonesResponse, error) {
+func (c *zoneServiceClient) GetZones(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetZonesResponse, error) {
 	out := new(GetZonesResponse)
-	err := c.cc.Invoke(ctx, "/zones.UsersService/GetZones", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/zones.ZoneService/GetZones", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UsersServiceServer is the server API for UsersService service.
-// All implementations must embed UnimplementedUsersServiceServer
+// ZoneServiceServer is the server API for ZoneService service.
+// All implementations must embed UnimplementedZoneServiceServer
 // for forward compatibility
-type UsersServiceServer interface {
+type ZoneServiceServer interface {
 	GetZones(context.Context, *emptypb.Empty) (*GetZonesResponse, error)
-	mustEmbedUnimplementedUsersServiceServer()
+	mustEmbedUnimplementedZoneServiceServer()
 }
 
-// UnimplementedUsersServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedUsersServiceServer struct {
+// UnimplementedZoneServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedZoneServiceServer struct {
 }
 
-func (UnimplementedUsersServiceServer) GetZones(context.Context, *emptypb.Empty) (*GetZonesResponse, error) {
+func (UnimplementedZoneServiceServer) GetZones(context.Context, *emptypb.Empty) (*GetZonesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetZones not implemented")
 }
-func (UnimplementedUsersServiceServer) mustEmbedUnimplementedUsersServiceServer() {}
+func (UnimplementedZoneServiceServer) mustEmbedUnimplementedZoneServiceServer() {}
 
-// UnsafeUsersServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UsersServiceServer will
+// UnsafeZoneServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ZoneServiceServer will
 // result in compilation errors.
-type UnsafeUsersServiceServer interface {
-	mustEmbedUnimplementedUsersServiceServer()
+type UnsafeZoneServiceServer interface {
+	mustEmbedUnimplementedZoneServiceServer()
 }
 
-func RegisterUsersServiceServer(s grpc.ServiceRegistrar, srv UsersServiceServer) {
-	s.RegisterService(&UsersService_ServiceDesc, srv)
+func RegisterZoneServiceServer(s grpc.ServiceRegistrar, srv ZoneServiceServer) {
+	s.RegisterService(&ZoneService_ServiceDesc, srv)
 }
 
-func _UsersService_GetZones_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ZoneService_GetZones_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).GetZones(ctx, in)
+		return srv.(ZoneServiceServer).GetZones(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/zones.UsersService/GetZones",
+		FullMethod: "/zones.ZoneService/GetZones",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).GetZones(ctx, req.(*emptypb.Empty))
+		return srv.(ZoneServiceServer).GetZones(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// UsersService_ServiceDesc is the grpc.ServiceDesc for UsersService service.
+// ZoneService_ServiceDesc is the grpc.ServiceDesc for ZoneService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var UsersService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "zones.UsersService",
-	HandlerType: (*UsersServiceServer)(nil),
+var ZoneService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "zones.ZoneService",
+	HandlerType: (*ZoneServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetZones",
-			Handler:    _UsersService_GetZones_Handler,
+			Handler:    _ZoneService_GetZones_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

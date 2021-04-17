@@ -5,7 +5,7 @@ option go_package = "/;zones";
 
 import "google/protobuf/empty.proto";
 
-service UsersService {
+service ZoneService {
   rpc GetZones(google.protobuf.Empty) returns (GetZonesResponse) {}
 }
 

@@ -46,12 +46,9 @@ var zonesCmd = &cobra.Command{
 	If zone names are set, all unamed zones will be ignored.
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client, err := client.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("password"))
-		if err != nil {
-			log.Fatal(err)
-		}
+		client := client.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("password"))
 		var zonesDesc []ZonesDescription
-		err = viper.UnmarshalKey("zones", &zonesDesc)
+		err := viper.UnmarshalKey("zones", &zonesDesc)
 		if err != nil {
 			log.Fatalf("unable to decode into struct: %v", err)
 		}

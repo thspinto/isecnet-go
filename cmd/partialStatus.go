@@ -33,10 +33,7 @@ var partialStatusCmd = &cobra.Command{
 	Short: "Get partial central status",
 	Long:  `Get partial central status. This returns all info about the central and the connected peripherics.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client, err := client.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("alarm_password"))
-		if err != nil {
-			log.Fatal(err)
-		}
+		client := client.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("alarm_password"))
 		status, err := client.GetPartialStatus()
 		if err != nil {
 			log.Fatal(err)
