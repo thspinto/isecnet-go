@@ -10,7 +10,8 @@ import (
 func Test_NewClient(t *testing.T) {
 	ln, err := net.Listen("tcp", ":12345")
 	assert.NoError(t, err)
-	NewClient("localhost", "12345", "1234")
+	_, err = NewClient("localhost", "12345", "1234")
+	assert.NoError(t, err)
 	_, err = ln.Accept()
 	assert.NoError(t, err)
 }
@@ -33,5 +34,7 @@ func Test_command(t *testing.T) {
 	c := Client{
 		conn: client,
 	}
-	assert.Equal(t, expectedByClient[1:], c.command(expectedByServer))
+	r, err := c.command(expectedByServer)
+	assert.Nil(t, err)
+	assert.Equal(t, expectedByClient[1:], r)
 }

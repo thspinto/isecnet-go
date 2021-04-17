@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 
@@ -32,11 +33,13 @@ var partialStatusCmd = &cobra.Command{
 	Short: "Get partial central status",
 	Long:  `Get partial central status. This returns all info about the central and the connected peripherics.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client := client.NewClient(viper.GetString("host"), viper.GetString("port"), viper.GetString("password"))
+		client, err := client.NewClient(viper.GetString("host"), viper.GetString("port"), viper.GetString("password"))
+		if err != nil {
+			log.Fatal(err)
+		}
 		status, err := client.GetPartialStatus()
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetHeader([]string{"Zone", "Anulated", "Open", "Violated", "LowBattery", "Tamper", "Short Circuit"})

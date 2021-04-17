@@ -67,7 +67,7 @@ type StatusResponse struct {
 }
 
 // GetPartialStatus get the partial status from the Central
-func (c *Client) GetPartialStatus() (*StatusResponse, error) {
+func (c *Client) GetPartialStatus() (response *StatusResponse, err error) {
 	request := ISECNetFrame{
 		command: COMMAND,
 		data: ISECNetMobileFrame{
@@ -76,23 +76,23 @@ func (c *Client) GetPartialStatus() (*StatusResponse, error) {
 		},
 	}
 
-	response := c.command(request.bytes())
+	r, err := c.command(request.bytes())
 	log.WithFields(log.Fields{
-		"response": fmt.Sprintf("%x", response),
+		"response": fmt.Sprintf("%x", r),
 	}).Debug("Partial Status Response")
-	if len(response) <= 3 {
-		return nil, errors.New(GetShortResponse(response).description)
+	if len(r) <= 3 {
+		return nil, errors.New(GetShortResponse(r).description)
 	}
 
-	status := StatusResponse{
-		Zones:      parseZones(response),
-		Central:    parseCentral(response),
-		Date:       parseDate(response),
-		Keyboards:  parseKeyboard(response),
-		Partitions: parsePartitions(response),
+	response = &StatusResponse{
+		Zones:      parseZones(r),
+		Central:    parseCentral(r),
+		Date:       parseDate(r),
+		Keyboards:  parseKeyboard(r),
+		Partitions: parsePartitions(r),
 	}
 
-	return &status, nil
+	return
 }
 
 func parsePartitions(b []byte) []Partition {

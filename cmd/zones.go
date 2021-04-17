@@ -28,7 +28,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/thspinto/isecnet-go/pkg/client"
-	"github.com/thspinto/isecnet-go/pkg/handlers"
 )
 
 type ZonesDescription struct {
@@ -47,11 +46,15 @@ var zonesCmd = &cobra.Command{
 	If zone names are set, all unamed zones will be ignored.
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client := client.NewClient(viper.GetString("host"), viper.GetString("port"), viper.GetString("password"))
-
+		client, err := client.NewClient(viper.GetString("host"), viper.GetString("port"), viper.GetString("password"))
+		if err != nil {
+			log.Fatal(err)
+		}
 		var zonesDesc []ZonesDescription
-		err := viper.UnmarshalKey("zones", &zonesDesc)
-		handlers.CheckError("unable to decode into struct", err)
+		err = viper.UnmarshalKey("zones", &zonesDesc)
+		if err != nil {
+			log.Fatalf("unable to decode into struct: %v", err)
+		}
 
 		if viper.GetBool("watch") {
 			watchStatus(client, zonesDesc)
@@ -62,7 +65,7 @@ var zonesCmd = &cobra.Command{
 	},
 }
 
-func watchStatus(c client.Client, zonesDesc []ZonesDescription) {
+func watchStatus(c *client.Client, zonesDesc []ZonesDescription) {
 	if err := ui.Init(); err != nil {
 		log.Fatalf("failed to initialize termui: %v", err)
 	}
@@ -84,11 +87,10 @@ func watchStatus(c client.Client, zonesDesc []ZonesDescription) {
 	}
 }
 
-func updateUI(c client.Client, zonesDesc []ZonesDescription) {
+func updateUI(c *client.Client, zonesDesc []ZonesDescription) {
 	status, err := c.GetPartialStatus()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 	zones := status.Zones
 
@@ -114,11 +116,10 @@ func updateUI(c client.Client, zonesDesc []ZonesDescription) {
 	}
 }
 
-func printZones(c client.Client, zonesDesc []ZonesDescription) {
+func printZones(c *client.Client, zonesDesc []ZonesDescription) {
 	status, err := c.GetPartialStatus()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	if len(zonesDesc) > 0 {
