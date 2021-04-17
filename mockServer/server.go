@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/panjf2000/gnet"
+	"github.com/thspinto/isecnet-go/pkg/client"
 )
 
 type Server struct {
@@ -13,18 +14,18 @@ type Server struct {
 }
 
 func (es *Server) React(frame []byte, c gnet.Conn) (out []byte, action gnet.Action) {
-	if frame[len(frame)-1] != checksum(frame) {
+	sum := client.Checksum(frame[:len(frame)-1])
+	if frame[len(frame)-1] != sum {
 		out = []byte{0x2, 0xe9, 0xe0}
-		out = append(out, checksum(out))
-		fmt.Println("Invalid packet")
-		fmt.Printf("%b", checksum(frame))
+		out = append(out, client.Checksum(out))
+		fmt.Printf("Invalid packet: %x\n", sum)
 	} else if frame[1] != 0xe9 {
 		out = []byte{0x2, 0xe9, 0xe2}
-		out = append(out, checksum(out))
+		out = append(out, client.Checksum(out))
 		fmt.Println("Invalid command")
 	} else if string(frame[3:7]) != string([]byte{0x31, 0x32, 0x33, 0x34}) {
 		out = []byte{0x2, 0xe9, 0xe1}
-		out = append(out, checksum(out))
+		out = append(out, client.Checksum(out))
 		fmt.Println("Invalid password")
 	} else if frame[7] == 0x5a {
 		fmt.Printf("Partial Status: %v\n", es.count)
@@ -98,18 +99,10 @@ func (es *Server) React(frame []byte, c gnet.Conn) (out []byte, action gnet.Acti
 			},
 		}
 		out = zones[es.count%len(zones)]
-		out = append(out, checksum(out))
+		out = append(out, client.Checksum(out))
 		es.count++
 	}
 	return
-}
-
-func checksum(b []byte) byte {
-	sum := byte(0xff)
-	for _, b := range b[:len(b)-1] {
-		sum = sum ^ b
-	}
-	return sum
 }
 
 // Serve starts the server

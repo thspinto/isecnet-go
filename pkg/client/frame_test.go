@@ -15,8 +15,9 @@ func Test_checksum(t *testing.T) {
 		command: COMMAND,
 		data:    data,
 	}
+	bytes := frame.bytes()
 
-	assert.Equal(t, byte(0x40), frame.checksum(), "checksum failed")
+	assert.Equal(t, byte(0x40), bytes[len(bytes)-1], "checksum failed")
 }
 
 func Test_bytes(t *testing.T) {

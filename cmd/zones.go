@@ -109,7 +109,6 @@ func updateUI(c client.Client, zonesDesc []ZonesDescription) {
 		case zones[z.Id-1].Anulated:
 			p.Title = "Anulated"
 			p.BorderStyle.Fg = ui.ColorWhite
-
 		}
 		ui.Render(p)
 	}

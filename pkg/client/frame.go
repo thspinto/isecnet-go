@@ -38,18 +38,18 @@ func (frame *ISECNetFrame) bytes() []byte {
 	size := len(data) + 1
 	bytes := []byte{byte(size), frame.command}
 	bytes = append(bytes, data...)
-	bytes = append(bytes, frame.checksum())
+	bytes = append(bytes, Checksum(bytes))
 	return bytes
 }
 
-func (frame *ISECNetFrame) checksum() byte {
-	size := len(frame.data.bytes()) + 1
-	sum := byte(size) ^ frame.command // xor ISECNet frame data
-	for _, b := range frame.data.bytes() {
+// Checksum calculates the integrity byte
+// The integrity byte is the last byte of the
+// message and is an xor of all bytes of the frame.
+func Checksum(b []byte) byte {
+	sum := byte(0xFF) // two's complement
+	for _, b := range b {
 		sum = sum ^ b
 	}
-	sum = sum ^ 0xFF // two's complement
-
 	return sum
 }
 
