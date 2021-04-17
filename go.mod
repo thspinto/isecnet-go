@@ -12,4 +12,6 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.4.0
 	github.com/tidwall/evio v1.0.8
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0 // indirect
+	google.golang.org/protobuf v1.26.0 // indirect
 )

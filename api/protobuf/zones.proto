@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package zones;
+option go_package = "/;zones";
+
+import "google/protobuf/empty.proto";
+
+service UsersService {
+  rpc GetZones(google.protobuf.Empty) returns (GetZonesResponse) {}
+}
+
+message GetZonesResponse {
+  uint32 id = 1;
+  string name = 2;
+  string status = 3;
+}
