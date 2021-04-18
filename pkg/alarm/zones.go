@@ -5,18 +5,22 @@ import (
 	"github.com/spf13/viper"
 )
 
+// ZoneModel is a simple abstraction for Zone status
 type ZoneModel struct {
 	Id     int
 	Name   string
 	Status string
 }
 
+// ZoneDescription a configuration to add
+// contextual metadata to Zones
 type ZoneDescription struct {
 	Id          int    `yaml:"id"`
 	Name        string `yaml:"name"`
 	Description string `yaml:"description"`
 }
 
+// GetZones returns Zone statuses in a simple abstraction
 func (c *Client) GetZones() ([]ZoneModel, error) {
 	status, err := c.GetPartialStatus()
 	if err != nil {

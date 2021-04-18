@@ -53,7 +53,7 @@ var zonesCmd = &cobra.Command{
 	},
 }
 
-func watchStatus(c *alarm.Client, zones []alarm.ZoneModel) {
+func watchStatus(c alarm.AlarmClient, zones []alarm.ZoneModel) {
 	if err := ui.Init(); err != nil {
 		log.Fatalf("failed to initialize termui: %v", err)
 	}
@@ -75,7 +75,7 @@ func watchStatus(c *alarm.Client, zones []alarm.ZoneModel) {
 	}
 }
 
-func updateUI(c *alarm.Client, zones []alarm.ZoneModel) {
+func updateUI(c alarm.AlarmClient, zones []alarm.ZoneModel) {
 	viewCount := 0
 	for _, z := range zones {
 		if z.Name == "" && !viper.GetBool("all") {
@@ -100,7 +100,7 @@ func updateUI(c *alarm.Client, zones []alarm.ZoneModel) {
 	}
 }
 
-func printZones(c *alarm.Client, zones []alarm.ZoneModel) {
+func printZones(c alarm.AlarmClient, zones []alarm.ZoneModel) {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Zone", "Name", "Status"})
 

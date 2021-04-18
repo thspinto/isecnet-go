@@ -6,8 +6,11 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/thspinto/isecnet-go/pkg/alarm/frame"
 )
 
+// Zone is the raw zone status collected
+// from the alarm central
 type Zone struct {
 	Violated     bool
 	Anulated     bool
@@ -17,19 +20,25 @@ type Zone struct {
 	Tamper       bool // not implemented
 }
 
+// PGM indicates the status of given PGM
 type PGM struct {
 	Enabled bool
 }
 
+// Partition indicates the status of given partition
 type Partition struct {
 	Enabled bool
 }
 
+// Keyboard is the status of a keyboard
 type Keyboard struct {
 	ReceiverIssue bool
 	Issue         bool // keyboard has some issue
 	Tamper        bool
 }
+
+// Central is all the information relative to the central
+// collected from the partial status command
 type Central struct {
 	Model                     string
 	Firmware                  string
@@ -44,18 +53,22 @@ type Central struct {
 	Siren                     Siren
 }
 
+// Siren is the status of the siren
 type Siren struct {
 	Enabled      bool
 	WireCut      bool
 	ShortCircuit bool
 }
 
+// Battery is the status for the given battery
 type Battery struct {
 	Low              bool
 	AbsentOrInverted bool
 	ShortCircuit     bool
 }
 
+// StatusResponse is all the information
+// collected from the partial status command
 type StatusResponse struct {
 	Date             time.Time
 	Zones            []Zone
@@ -68,15 +81,15 @@ type StatusResponse struct {
 
 // GetPartialStatus get the partial status from the Central
 func (c *Client) GetPartialStatus() (response *StatusResponse, err error) {
-	request := ISECNetFrame{
-		command: COMMAND,
-		data: ISECNetMobileFrame{
-			password: []byte(c.password),
-			command:  []byte{0x5a},
+	request := frame.ISECNet{
+		Command: frame.COMMAND,
+		Data: frame.ISECNetMobile{
+			Password: []byte(c.password),
+			Command:  []byte{0x5a},
 		},
 	}
 
-	r, err := c.command(request.bytes())
+	r, err := c.command(request.Bytes())
 	if err != nil {
 		return
 	}
@@ -84,7 +97,7 @@ func (c *Client) GetPartialStatus() (response *StatusResponse, err error) {
 		"response": fmt.Sprintf("%x", r),
 	}).Debug("Partial Status Response")
 	if len(r) <= 3 {
-		return nil, errors.New(GetShortResponse(r).description)
+		return nil, errors.New(frame.GetShortResponse(r).Description)
 	}
 
 	response = &StatusResponse{

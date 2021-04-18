@@ -5,7 +5,7 @@ import (
 )
 
 type ZonesHandler struct {
-	client *alarm.Client
+	client alarm.AlarmClient
 }
 
 type Zone struct {
@@ -14,7 +14,7 @@ type Zone struct {
 	Status string
 }
 
-func NewZonesHandler(c *alarm.Client) *ZonesHandler {
+func NewZonesHandler(c alarm.AlarmClient) *ZonesHandler {
 	if c == nil {
 		panic("nil zones repository")
 	}

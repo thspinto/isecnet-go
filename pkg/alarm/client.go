@@ -8,6 +8,13 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type AlarmClient interface {
+	GetPartialStatus() (response *StatusResponse, err error)
+	GetZones() ([]ZoneModel, error)
+}
+
+// Client is the client for
+// communicating with the alarm central
 type Client struct {
 	host     string
 	port     string
@@ -16,7 +23,7 @@ type Client struct {
 }
 
 // NewClient returns client for communicating with the server through a tcp connection
-func NewClient(host, port, password string) (client *Client) {
+func NewClient(host, port, password string) (client AlarmClient) {
 	log.WithFields(log.Fields{
 		"address": host + ":" + port,
 	}).Info("Connecting...")

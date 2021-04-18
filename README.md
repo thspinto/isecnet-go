@@ -16,17 +16,6 @@ ISECnet is a proprietary protocol used by Intelbras in their alarm central commu
   zones         Get Zone status
 ```
 
-## Flags
-
-```
-      --config string     config file (default is $HOME/.isecnet-go.yaml)
-  -h, --help              help for isecnet-go
-      --alarm_host string       Host or IP of the alarm central (default "localhost")
-      --alarm_password string   Alarm central password (default "1234")
-      --alarm_port string       Alarm central port (default "9009")
-  -t, --toggle            Help message for toggle
-```
-
 ## Example
 
 ![Example of the zones and zones -w command running in the terminal](./img/zones.gif)

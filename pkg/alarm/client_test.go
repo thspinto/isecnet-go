@@ -32,7 +32,11 @@ func Test_command(t *testing.T) {
 
 func Test_command_error(t *testing.T) {
 	expectedByServer := []byte{0x08, 0xe9, 0x21, 0x31, 0x32, 0x33, 0x34, 0x5a, 0x21, 0x40}
-	c := NewClient("localhost", "9009", "123")
+	c := Client{
+		host:     "localhost",
+		port:     "9009",
+		password: "123",
+	}
 	_, err := c.command(expectedByServer)
 	assert.Error(t, err)
 }
