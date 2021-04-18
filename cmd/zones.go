@@ -39,10 +39,10 @@ var zonesCmd = &cobra.Command{
 	If zone names are set, all unamed zones will be ignored.
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client := alarm.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("password"))
+		client := alarm.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("alarm_password"))
 		zones, err := client.GetZones()
 		if err != nil {
-			log.Fatalln("Failed to get zone status")
+			log.Fatalln("Failed to get zone status: ", err)
 		}
 		if viper.GetBool("watch") {
 			watchStatus(client, zones)
@@ -76,9 +76,13 @@ func watchStatus(c *alarm.Client, zones []alarm.ZoneModel) {
 }
 
 func updateUI(c *alarm.Client, zones []alarm.ZoneModel) {
-	for i, z := range zones {
+	viewCount := 0
+	for _, z := range zones {
+		if z.Name == "" && !viper.GetBool("all") {
+			continue
+		}
 		p := widgets.NewParagraph()
-		p.SetRect(0+(15*int(i/3)), 0+(5*(i%3)), 15+(15*int(i/3)), 5+(5*(i%3)))
+		p.SetRect(0+(15*int(viewCount/4)), 0+(5*(viewCount%4)), 15+(15*int(viewCount/4)), 5+(5*(viewCount%4)))
 		p.BorderStyle.Fg = ui.ColorGreen
 		p.TitleStyle.Bg = ui.ColorClear
 		p.Text = z.Name
@@ -91,6 +95,7 @@ func updateUI(c *alarm.Client, zones []alarm.ZoneModel) {
 		case "Anulated":
 			p.BorderStyle.Fg = ui.ColorWhite
 		}
+		viewCount++
 		ui.Render(p)
 	}
 }
@@ -100,6 +105,9 @@ func printZones(c *alarm.Client, zones []alarm.ZoneModel) {
 	table.SetHeader([]string{"Zone", "Name", "Status"})
 
 	for _, z := range zones {
+		if z.Name == "" && !viper.GetBool("all") {
+			continue
+		}
 		table.Append([]string{
 			strconv.Itoa(z.Id),
 			z.Name,
@@ -122,6 +130,7 @@ func init() {
 	// is called directly, e.g.:
 	// zonesCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	zonesCmd.Flags().BoolP("watch", "w", false, "Watch Zone Status")
+	zonesCmd.Flags().Bool("all", false, "Show all zones")
 	if err := viper.BindPFlags(zonesCmd.LocalFlags()); err != nil {
 		panic(err)
 	}

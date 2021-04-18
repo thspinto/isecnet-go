@@ -24,9 +24,11 @@ func (c *Client) GetZones() ([]ZoneModel, error) {
 	}
 	var zonesDesc []ZoneDescription
 	err = viper.UnmarshalKey("zones", &zonesDesc)
-	log.WithFields(log.Fields{
-		"error": err,
-	}).Error("Failed to decode zone descriptions")
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Error("Failed to decode zone descriptions")
+	}
 
 	return buildZoneModels(status.Zones, zonesDesc), nil
 }
