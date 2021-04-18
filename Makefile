@@ -11,6 +11,6 @@ unit-test:
 mock-server:
 	$(MAKE) -C internal/mockAlarmCentral run
 
-.PHONY: proto
-proto:
-	protoc --go_out=internal/genproto/zones --go-grpc_out=internal/genproto/zones -I api/protobuf api/protobuf/zones.proto
+.PHONY: gen
+gen:
+	go generate ./...

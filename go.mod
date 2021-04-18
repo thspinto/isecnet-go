@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/gizak/termui/v3 v3.1.0
+	github.com/golang/mock v1.3.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/olekukonko/tablewriter v0.0.5

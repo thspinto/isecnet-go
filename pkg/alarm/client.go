@@ -8,6 +8,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//go:generate mockgen -destination mock_alarm/mock_alarm.go github.com/thspinto/isecnet-go/pkg/alarm AlarmClient
+
+// AlarmClient is the client interface
 type AlarmClient interface {
 	GetPartialStatus() (response *StatusResponse, err error)
 	GetZones() ([]ZoneModel, error)
