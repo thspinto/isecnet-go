@@ -9,7 +9,7 @@ import (
 )
 
 type ZonesRepository struct {
-	client *alarm.Client
+	client alarm.AlarmClient
 }
 
 func NewZonesRepository(c *alarm.Client) ZonesRepository {
