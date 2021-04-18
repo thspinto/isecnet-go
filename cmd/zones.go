@@ -16,7 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -27,14 +26,8 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thspinto/isecnet-go/pkg/client"
+	"github.com/thspinto/isecnet-go/pkg/alarm"
 )
-
-type ZonesDescription struct {
-	Id          int    `yaml:"id"`
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
-}
 
 // zonesCmd represents the zones command
 var zonesCmd = &cobra.Command{
@@ -46,28 +39,26 @@ var zonesCmd = &cobra.Command{
 	If zone names are set, all unamed zones will be ignored.
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client := client.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("password"))
-		var zonesDesc []ZonesDescription
-		err := viper.UnmarshalKey("zones", &zonesDesc)
+		client := alarm.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("password"))
+		zones, err := client.GetZones()
 		if err != nil {
-			log.Fatalf("unable to decode into struct: %v", err)
+			log.Fatalln("Failed to get zone status")
 		}
-
 		if viper.GetBool("watch") {
-			watchStatus(client, zonesDesc)
+			watchStatus(client, zones)
 		} else {
-			printZones(client, zonesDesc)
+			printZones(client, zones)
 		}
 
 	},
 }
 
-func watchStatus(c *client.Client, zonesDesc []ZonesDescription) {
+func watchStatus(c *alarm.Client, zones []alarm.ZoneModel) {
 	if err := ui.Init(); err != nil {
 		log.Fatalf("failed to initialize termui: %v", err)
 	}
 	defer ui.Close()
-	updateUI(c, zonesDesc)
+	updateUI(c, zones)
 
 	tick := time.Tick(2 * time.Second)
 	uiEvents := ui.PollEvents()
@@ -79,85 +70,40 @@ func watchStatus(c *client.Client, zonesDesc []ZonesDescription) {
 				return
 			}
 		case <-tick:
-			updateUI(c, zonesDesc)
+			updateUI(c, zones)
 		}
 	}
 }
 
-func updateUI(c *client.Client, zonesDesc []ZonesDescription) {
-	status, err := c.GetPartialStatus()
-	if err != nil {
-		log.Fatal(err)
-	}
-	zones := status.Zones
-
-	for i, z := range zonesDesc {
+func updateUI(c *alarm.Client, zones []alarm.ZoneModel) {
+	for i, z := range zones {
 		p := widgets.NewParagraph()
 		p.SetRect(0+(15*int(i/3)), 0+(5*(i%3)), 15+(15*int(i/3)), 5+(5*(i%3)))
 		p.BorderStyle.Fg = ui.ColorGreen
 		p.TitleStyle.Bg = ui.ColorClear
 		p.Text = z.Name
-
-		switch {
-		case zones[z.Id-1].Open:
-			p.Title = "Open"
+		p.Title = z.Status
+		switch z.Status {
+		case "Open":
 			p.BorderStyle.Fg = ui.ColorCyan
-		case zones[z.Id-1].Violated:
-			p.Title = "Violated"
+		case "Violated":
 			p.BorderStyle.Fg = ui.ColorRed
-		case zones[z.Id-1].Anulated:
-			p.Title = "Anulated"
+		case "Anulated":
 			p.BorderStyle.Fg = ui.ColorWhite
 		}
 		ui.Render(p)
 	}
 }
 
-func printZones(c *client.Client, zonesDesc []ZonesDescription) {
-	status, err := c.GetPartialStatus()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if len(zonesDesc) > 0 {
-		showConfiguredZones(zonesDesc, status.Zones)
-	} else {
-		showAllZones(status.Zones)
-	}
-
-}
-
-func showConfiguredZones(zoneDesc []ZonesDescription, zones []client.Zone) {
+func printZones(c *alarm.Client, zones []alarm.ZoneModel) {
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Zone", "Anulated", "Open", "Violated", "LowBattery", "Tamper", "Short Circuit"})
+	table.SetHeader([]string{"Zone", "Name", "Status"})
 
-	for _, z := range zoneDesc {
+	for _, z := range zones {
 		table.Append([]string{
+			strconv.Itoa(z.Id),
 			z.Name,
-			strconv.FormatBool(zones[z.Id-1].Anulated),
-			strconv.FormatBool(zones[z.Id-1].Open),
-			strconv.FormatBool(zones[z.Id-1].Violated),
-			strconv.FormatBool(zones[z.Id-1].LowBattery),
-			strconv.FormatBool(zones[z.Id-1].Tamper),
-			strconv.FormatBool(zones[z.Id-1].ShortCircuit),
-		})
-	}
-	table.Render()
-}
-
-func showAllZones(zones []client.Zone) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Zone", "Anulated", "Open", "Violated", "LowBattery", "Tamper", "Short Circuit"})
-
-	for i, z := range zones {
-		table.Append([]string{
-			"Zone " + fmt.Sprint(i+1),
-			strconv.FormatBool(z.Anulated),
-			strconv.FormatBool(z.Open),
-			strconv.FormatBool(z.Anulated),
-			strconv.FormatBool(z.LowBattery),
-			strconv.FormatBool(z.Tamper),
-			strconv.FormatBool(z.ShortCircuit),
+			z.Status,
 		})
 	}
 	table.Render()

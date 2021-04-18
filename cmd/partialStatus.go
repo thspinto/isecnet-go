@@ -24,7 +24,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thspinto/isecnet-go/pkg/client"
+	"github.com/thspinto/isecnet-go/pkg/alarm"
 )
 
 // partialStatusCmd represents the partialStatus command
@@ -33,7 +33,7 @@ var partialStatusCmd = &cobra.Command{
 	Short: "Get partial central status",
 	Long:  `Get partial central status. This returns all info about the central and the connected peripherics.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client := client.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("alarm_password"))
+		client := alarm.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("alarm_password"))
 		status, err := client.GetPartialStatus()
 		if err != nil {
 			log.Fatal(err)

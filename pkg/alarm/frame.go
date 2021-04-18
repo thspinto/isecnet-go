@@ -1,4 +1,4 @@
-package client
+package alarm
 
 const (
 	FRAME_DELIMITER = 0x21
