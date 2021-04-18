@@ -77,6 +77,9 @@ func (c *Client) GetPartialStatus() (response *StatusResponse, err error) {
 	}
 
 	r, err := c.command(request.bytes())
+	if err != nil {
+		return
+	}
 	log.WithFields(log.Fields{
 		"response": fmt.Sprintf("%x", r),
 	}).Debug("Partial Status Response")

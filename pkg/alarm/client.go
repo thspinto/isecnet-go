@@ -45,7 +45,7 @@ func (c *Client) connect() (err error) {
 // command dispatches the command and return the response
 func (c *Client) command(b []byte) (response []byte, err error) {
 	if c.conn == nil {
-		if err = c.connect(); err == nil {
+		if err = c.connect(); err != nil {
 			return
 		}
 	}

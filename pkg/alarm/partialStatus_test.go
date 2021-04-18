@@ -32,6 +32,12 @@ func Test_Client_GetPartialStatusError(t *testing.T) {
 	assert.Error(t, err, "Invalid password")
 }
 
+func Test_Client_GetPartialStatusConnectionError(t *testing.T) {
+	c := NewClient("localhost", "9009", "123")
+	_, err := c.GetPartialStatus()
+	assert.Error(t, err)
+}
+
 func Test_Client_parceZones(t *testing.T) {
 	// Zone 1: violated false, anulated false, open false, shortCircuit false, lowBattery false, tamper false
 	// Zone 10 violated true, anulated true, open true, shortCircuit true, lowBattery true, tamper true
