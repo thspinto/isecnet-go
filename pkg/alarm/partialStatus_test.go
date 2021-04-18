@@ -1,6 +1,7 @@
 package alarm
 
 import (
+	"context"
 	"net"
 	"testing"
 	"time"
@@ -28,13 +29,13 @@ func Test_Client_GetPartialStatusError(t *testing.T) {
 		password: "1234",
 	}
 
-	_, err := c.GetPartialStatus()
+	_, err := c.GetPartialStatus(context.Background())
 	assert.Error(t, err, "Invalid password")
 }
 
 func Test_Client_GetPartialStatusConnectionError(t *testing.T) {
 	c := NewClient("localhost", "9009", "123")
-	_, err := c.GetPartialStatus()
+	_, err := c.GetPartialStatus(context.Background())
 	assert.Error(t, err)
 }
 

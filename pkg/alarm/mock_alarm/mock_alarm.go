@@ -5,6 +5,7 @@
 package mock_alarm
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,31 +36,31 @@ func (m *MockAlarmClient) EXPECT() *MockAlarmClientMockRecorder {
 }
 
 // GetPartialStatus mocks base method.
-func (m *MockAlarmClient) GetPartialStatus() (*alarm.StatusResponse, error) {
+func (m *MockAlarmClient) GetPartialStatus(arg0 context.Context) (*alarm.StatusResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPartialStatus")
+	ret := m.ctrl.Call(m, "GetPartialStatus", arg0)
 	ret0, _ := ret[0].(*alarm.StatusResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetPartialStatus indicates an expected call of GetPartialStatus.
-func (mr *MockAlarmClientMockRecorder) GetPartialStatus() *gomock.Call {
+func (mr *MockAlarmClientMockRecorder) GetPartialStatus(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPartialStatus", reflect.TypeOf((*MockAlarmClient)(nil).GetPartialStatus))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPartialStatus", reflect.TypeOf((*MockAlarmClient)(nil).GetPartialStatus), arg0)
 }
 
 // GetZones mocks base method.
-func (m *MockAlarmClient) GetZones() ([]alarm.ZoneModel, error) {
+func (m *MockAlarmClient) GetZones(arg0 context.Context) ([]alarm.ZoneModel, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetZones")
+	ret := m.ctrl.Call(m, "GetZones", arg0)
 	ret0, _ := ret[0].([]alarm.ZoneModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetZones indicates an expected call of GetZones.
-func (mr *MockAlarmClientMockRecorder) GetZones() *gomock.Call {
+func (mr *MockAlarmClientMockRecorder) GetZones(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetZones", reflect.TypeOf((*MockAlarmClient)(nil).GetZones))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetZones", reflect.TypeOf((*MockAlarmClient)(nil).GetZones), arg0)
 }

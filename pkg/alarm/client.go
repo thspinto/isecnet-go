@@ -1,6 +1,7 @@
 package alarm
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net"
@@ -12,8 +13,8 @@ import (
 
 // AlarmClient is the client interface
 type AlarmClient interface {
-	GetPartialStatus() (response *StatusResponse, err error)
-	GetZones() ([]ZoneModel, error)
+	GetPartialStatus(ctx context.Context) (response *StatusResponse, err error)
+	GetZones(ctx context.Context) ([]ZoneModel, error)
 }
 
 // Client is the client for

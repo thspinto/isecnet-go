@@ -1,12 +1,13 @@
 package adapters
 
 import (
+	"context"
 	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"github.com/thspinto/isecnet-go/internal/app/query"
+	"github.com/thspinto/isecnet-go/internal/domain/zone"
 	"github.com/thspinto/isecnet-go/pkg/alarm"
 	"github.com/thspinto/isecnet-go/pkg/alarm/mock_alarm"
 )
@@ -15,7 +16,7 @@ func TestZonesRepository_GetZones(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	m := mock_alarm.NewMockAlarmClient(ctrl)
 
-	expected := []query.Zone{
+	expected := []zone.Zone{
 		{
 			Id:     "1",
 			Name:   "one",
@@ -24,7 +25,7 @@ func TestZonesRepository_GetZones(t *testing.T) {
 	}
 
 	m.EXPECT().
-		GetZones().
+		GetZones(context.Background()).
 		Return([]alarm.ZoneModel{
 			{
 				Name:   "one",
@@ -37,7 +38,7 @@ func TestZonesRepository_GetZones(t *testing.T) {
 		client: m,
 	}
 
-	z, err := c.GetZones()
+	z, err := c.GetZones(context.Background())
 	assert.NoError(t, err)
 	assert.Equal(t, expected, z)
 }
@@ -47,13 +48,13 @@ func TestZonesRepository_GetZonesError(t *testing.T) {
 	m := mock_alarm.NewMockAlarmClient(ctrl)
 
 	m.EXPECT().
-		GetZones().
+		GetZones(context.Background()).
 		Return(nil, errors.New("error"))
 
 	c := ZonesRepository{
 		client: m,
 	}
 
-	_, err := c.GetZones()
+	_, err := c.GetZones(context.Background())
 	assert.Error(t, err)
 }

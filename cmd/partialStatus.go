@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -34,7 +35,7 @@ var partialStatusCmd = &cobra.Command{
 	Long:  `Get partial central status. This returns all info about the central and the connected peripherics.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client := alarm.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("alarm_password"))
-		status, err := client.GetPartialStatus()
+		status, err := client.GetPartialStatus(context.Background())
 		if err != nil {
 			log.Fatal(err)
 		}

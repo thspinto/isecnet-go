@@ -1,6 +1,8 @@
 package alarm
 
 import (
+	"context"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -21,8 +23,8 @@ type ZoneDescription struct {
 }
 
 // GetZones returns Zone statuses in a simple abstraction
-func (c *Client) GetZones() ([]ZoneModel, error) {
-	status, err := c.GetPartialStatus()
+func (c *Client) GetZones(ctx context.Context) ([]ZoneModel, error) {
+	status, err := c.GetPartialStatus(ctx)
 	if err != nil {
 		return nil, err
 	}

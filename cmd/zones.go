@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"log"
 	"os"
 	"strconv"
@@ -40,7 +41,7 @@ var zonesCmd = &cobra.Command{
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client := alarm.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("alarm_password"))
-		zones, err := client.GetZones()
+		zones, err := client.GetZones(context.Background())
 		if err != nil {
 			log.Fatalln("Failed to get zone status: ", err)
 		}

@@ -1,6 +1,7 @@
 package alarm
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"time"
@@ -80,7 +81,7 @@ type StatusResponse struct {
 }
 
 // GetPartialStatus get the partial status from the Central
-func (c *Client) GetPartialStatus() (response *StatusResponse, err error) {
+func (c *Client) GetPartialStatus(ctx context.Context) (response *StatusResponse, err error) {
 	request := frame.ISECNet{
 		Command: frame.COMMAND,
 		Data: frame.ISECNetMobile{
