@@ -2,30 +2,34 @@ package app
 
 import (
 	"github.com/spf13/viper"
-	"github.com/thspinto/isecnet-go/internal/app/handlers"
-	"github.com/thspinto/isecnet-go/pkg/client"
+	"github.com/thspinto/isecnet-go/internal/app/query"
+	"github.com/thspinto/isecnet-go/pkg/alarm"
 )
 
 type Application struct {
-	handlers Handlers
+	Commands Commands
+	Queries  Queries
 }
 
-type Handlers struct {
-	GetZones *handlers.GetZonesHandler
+type Commands struct {
+}
+
+type Queries struct {
+	Zones *query.ZonesHandler
 }
 
 func NewApplication() Application {
-	c := client.NewClient(
+	c := alarm.NewClient(
 		viper.GetString("alarm_host"),
 		viper.GetString("alarm_port"),
 		viper.GetString("alarm_password"),
 	)
 
-	h := Handlers{
-		GetZones: handlers.NewGetZonesHandler(c),
+	q := Queries{
+		Zones: query.NewZonesHandler(c),
 	}
 
 	return Application{
-		handlers: h,
+		Queries: q,
 	}
 }

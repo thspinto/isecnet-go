@@ -9,7 +9,7 @@ unit-test:
 
 .PHONY: mock-server
 mock-server:
-	$(MAKE) -C mockServer run
+	$(MAKE) -C internal/mockAlarmCentral run
 
 .PHONY: proto
 proto:
