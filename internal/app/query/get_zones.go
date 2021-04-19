@@ -23,6 +23,6 @@ type ZonesReadModel interface {
 	GetZones(ctx context.Context) (zones []zone.Zone, err error)
 }
 
-func (h GetZonesHandler) Handle(ctx context.Context) (tr []zone.Zone, err error) {
+func (h GetZonesHandler) Handle(ctx context.Context) ([]zone.Zone, error) {
 	return h.readModel.GetZones(ctx)
 }

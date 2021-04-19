@@ -28,10 +28,6 @@ type Client struct {
 
 // NewClient returns client for communicating with the server through a tcp connection
 func NewClient(host, port, password string) (client AlarmClient) {
-	log.WithFields(log.Fields{
-		"address": host + ":" + port,
-	}).Info("Connecting...")
-
 	client = &Client{
 		host:     host,
 		port:     port,
@@ -42,6 +38,9 @@ func NewClient(host, port, password string) (client AlarmClient) {
 }
 
 func (c *Client) connect() (err error) {
+	log.WithFields(log.Fields{
+		"address": c.host + ":" + c.port,
+	}).Info("Connecting...")
 	conn, err := net.Dial("tcp", c.host+":"+c.port)
 	if err != nil {
 		log.WithFields(log.Fields{

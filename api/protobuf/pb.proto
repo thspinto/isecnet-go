@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "/;pb";
+
+import "google/protobuf/empty.proto";
+
+service ZoneService {
+  rpc GetZones(google.protobuf.Empty) returns (ZoneResponse) {}
+}
+
+message ZoneResponse {
+  repeated Zone zones = 4;
+}
+
+message Zone {
+  string id = 1;
+  string name = 2;
+  string status = 3;
+}

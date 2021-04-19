@@ -16,10 +16,15 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"context"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thspinto/isecnet-go/api/pb"
+	"github.com/thspinto/isecnet-go/internal/common/server"
+	"github.com/thspinto/isecnet-go/internal/ports"
+	"github.com/thspinto/isecnet-go/internal/service"
+	"google.golang.org/grpc"
 )
 
 // serverCmd represents the server command
@@ -28,7 +33,15 @@ var serverCmd = &cobra.Command{
 	Short: "Starts gRPC server",
 	Long:  `Starts the gRCP server exposing the alarm central protocol an an API.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("server called")
+		ctx := context.Background()
+
+		app := service.NewApplication(ctx)
+
+		server.RunGRPCServer(viper.GetString("server_host"), viper.GetString("server_port"),
+			func(server *grpc.Server) {
+				svc := ports.NewGrpcServer(app)
+				pb.RegisterZoneServiceServer(server, svc)
+			})
 	},
 }
 

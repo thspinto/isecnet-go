@@ -1,3 +1,3 @@
-//go:generate protoc --go_out=../gen_zones --go-grpc_out=../gen_zones -I . zones.proto
+//go:generate protoc --go_out=../pb_gen --go-grpc_out=../pb_gen -I . pb.proto
 
-package zones
+package pb
