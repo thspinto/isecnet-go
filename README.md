@@ -16,17 +16,6 @@ ISECnet is a proprietary protocol used by Intelbras in their alarm central commu
   zones         Get Zone status
 ```
 
-## Flags
-
-```
-      --config string     config file (default is $HOME/.isecnet-go.yaml)
-  -h, --help              help for isecnet-go
-      --host string       Host or IP of the central (default "localhost")
-      --password string   Central password (default "1234")
-      --port string       Central port (default "9009")
-  -t, --toggle            Help message for toggle
-```
-
 ## Example
 
 ![Example of the zones and zones -w command running in the terminal](./img/zones.gif)
@@ -40,7 +29,6 @@ zones:
   - id: 1
     name: Front Door
     description: Front dor magnetic sensor
-
 ```
 
 ```bash
@@ -62,8 +50,14 @@ INFO[0000] Connecting...                                 address="localhost:9009
 
 * `make test`: run all
 
-* `make mock-server`: starts the mock server
+* `make mock-alarm-central`: starts the mock server
 
+* `go run . server`: starts the gRPC server:
+
+```
+// Testing the API
+grpcurl -plaintext localhost:8080 ZoneService.GetZones
+```
 
 # References
 

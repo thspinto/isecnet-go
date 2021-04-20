@@ -1,4 +1,4 @@
-package client
+package alarm
 
 import (
 	"net"
@@ -6,14 +6,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 )
-
-func Test_NewClient(t *testing.T) {
-	ln, err := net.Listen("tcp", ":12345")
-	assert.NoError(t, err)
-	NewClient("localhost", "12345", "1234")
-	_, err = ln.Accept()
-	assert.NoError(t, err)
-}
 
 func Test_command(t *testing.T) {
 	client, server := net.Pipe()
@@ -33,5 +25,18 @@ func Test_command(t *testing.T) {
 	c := Client{
 		conn: client,
 	}
-	assert.Equal(t, expectedByClient[1:], c.command(expectedByServer))
+	r, err := c.command(expectedByServer)
+	assert.Nil(t, err)
+	assert.Equal(t, expectedByClient[1:], r)
+}
+
+func Test_command_error(t *testing.T) {
+	expectedByServer := []byte{0x08, 0xe9, 0x21, 0x31, 0x32, 0x33, 0x34, 0x5a, 0x21, 0x40}
+	c := Client{
+		host:     "localhost",
+		port:     "9009",
+		password: "123",
+	}
+	_, err := c.command(expectedByServer)
+	assert.Error(t, err)
 }

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "/;pb";
+
+service ZoneService {
+  rpc GetZones(GetZoneRequest) returns (GetZoneResponse) {}
+}
+
+message GetZoneResponse {
+  repeated Zone zones = 1;
+}
+
+message GetZoneRequest {
+  bool all = 1;
+}
+
+message Zone {
+  string id = 1;
+  string name = 2;
+  string status = 3;
+}

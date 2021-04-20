@@ -16,14 +16,16 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thspinto/isecnet-go/pkg/client"
+	"github.com/thspinto/isecnet-go/pkg/alarm"
 )
 
 // partialStatusCmd represents the partialStatus command
@@ -32,11 +34,10 @@ var partialStatusCmd = &cobra.Command{
 	Short: "Get partial central status",
 	Long:  `Get partial central status. This returns all info about the central and the connected peripherics.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client := client.NewClient(viper.GetString("host"), viper.GetString("port"), viper.GetString("password"))
-		status, err := client.GetPartialStatus()
+		client := alarm.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("alarm_password"))
+		status, err := client.GetPartialStatus(context.Background())
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetHeader([]string{"Zone", "Anulated", "Open", "Violated", "LowBattery", "Tamper", "Short Circuit"})
