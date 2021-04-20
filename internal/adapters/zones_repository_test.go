@@ -25,7 +25,7 @@ func TestZonesRepository_GetZones(t *testing.T) {
 	}
 
 	m.EXPECT().
-		GetZones(context.Background()).
+		GetZones(context.Background(), false).
 		Return([]alarm.ZoneModel{
 			{
 				Name:   "one",
@@ -38,7 +38,7 @@ func TestZonesRepository_GetZones(t *testing.T) {
 		client: m,
 	}
 
-	z, err := c.GetZones(context.Background())
+	z, err := c.GetZones(context.Background(), false)
 	assert.NoError(t, err)
 	assert.Equal(t, expected, z)
 }
@@ -48,13 +48,13 @@ func TestZonesRepository_GetZonesError(t *testing.T) {
 	m := mock_alarm.NewMockAlarmClient(ctrl)
 
 	m.EXPECT().
-		GetZones(context.Background()).
+		GetZones(context.Background(), false).
 		Return(nil, errors.New("error"))
 
 	c := ZonesRepository{
 		client: m,
 	}
 
-	_, err := c.GetZones(context.Background())
+	_, err := c.GetZones(context.Background(), false)
 	assert.Error(t, err)
 }

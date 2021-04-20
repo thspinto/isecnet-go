@@ -21,8 +21,8 @@ func NewZonesRepository(c alarm.AlarmClient) *ZonesRepository {
 	return &ZonesRepository{c}
 }
 
-func (r *ZonesRepository) GetZones(ctx context.Context) (zones []zone.Zone, err error) {
-	response, err := r.client.GetZones(ctx)
+func (r *ZonesRepository) GetZones(ctx context.Context, all bool) (zones []zone.Zone, err error) {
+	response, err := r.client.GetZones(ctx, all)
 	if err != nil {
 		return nil, errors.NewAlarmCentralError("Failed to get partial status", "alarm-zone-status-get-error")
 	}

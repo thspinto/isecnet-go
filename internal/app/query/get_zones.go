@@ -20,9 +20,9 @@ func NewGetZonesHandler(readModel ZonesReadModel) *GetZonesHandler {
 }
 
 type ZonesReadModel interface {
-	GetZones(ctx context.Context) (zones []zone.Zone, err error)
+	GetZones(ctx context.Context, all bool) (zones []zone.Zone, err error)
 }
 
-func (h GetZonesHandler) Handle(ctx context.Context) ([]zone.Zone, error) {
-	return h.readModel.GetZones(ctx)
+func (h GetZonesHandler) Handle(ctx context.Context, all bool) ([]zone.Zone, error) {
+	return h.readModel.GetZones(ctx, all)
 }

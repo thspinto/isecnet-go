@@ -3,7 +3,6 @@ package ports
 import (
 	"context"
 
-	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/thspinto/isecnet-go/api/pb"
 	"github.com/thspinto/isecnet-go/internal/app"
 	"google.golang.org/grpc/codes"
@@ -19,8 +18,8 @@ func NewGrpcServer(application app.Application) GRPCServer {
 	return GRPCServer{app: application}
 }
 
-func (g GRPCServer) GetZones(ctx context.Context, in *empty.Empty) (*pb.ZoneResponse, error) {
-	zones, err := g.app.Queries.Zones.Handle(ctx)
+func (g GRPCServer) GetZones(ctx context.Context, in *pb.GetZoneRequest) (*pb.GetZoneResponse, error) {
+	zones, err := g.app.Queries.Zones.Handle(ctx, in.All)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -34,5 +33,5 @@ func (g GRPCServer) GetZones(ctx context.Context, in *empty.Empty) (*pb.ZoneResp
 				Status: r.Status,
 			})
 	}
-	return &pb.ZoneResponse{Zones: response}, nil
+	return &pb.GetZoneResponse{Zones: response}, nil
 }

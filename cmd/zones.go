@@ -41,7 +41,7 @@ var zonesCmd = &cobra.Command{
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client := alarm.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("alarm_password"))
-		zones, err := client.GetZones(context.Background())
+		zones, err := client.GetZones(context.Background(), viper.GetBool("all"))
 		if err != nil {
 			log.Fatalln("Failed to get zone status: ", err)
 		}
@@ -79,9 +79,6 @@ func watchStatus(c alarm.AlarmClient, zones []alarm.ZoneModel) {
 func updateUI(c alarm.AlarmClient, zones []alarm.ZoneModel) {
 	viewCount := 0
 	for _, z := range zones {
-		if z.Name == "" && !viper.GetBool("all") {
-			continue
-		}
 		p := widgets.NewParagraph()
 		p.SetRect(0+(15*int(viewCount/4)), 0+(5*(viewCount%4)), 15+(15*int(viewCount/4)), 5+(5*(viewCount%4)))
 		p.BorderStyle.Fg = ui.ColorGreen

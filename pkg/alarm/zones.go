@@ -23,7 +23,7 @@ type ZoneDescription struct {
 }
 
 // GetZones returns Zone statuses in a simple abstraction
-func (c *Client) GetZones(ctx context.Context) ([]ZoneModel, error) {
+func (c *Client) GetZones(ctx context.Context, all bool) ([]ZoneModel, error) {
 	status, err := c.GetPartialStatus(ctx)
 	if err != nil {
 		return nil, err
@@ -36,13 +36,16 @@ func (c *Client) GetZones(ctx context.Context) ([]ZoneModel, error) {
 		}).Error("Failed to decode zone descriptions")
 	}
 
-	return buildZoneModels(status.Zones, zonesDesc), nil
+	return buildZoneModels(status.Zones, zonesDesc, all), nil
 }
 
-func buildZoneModels(zones []Zone, zonesDesc []ZoneDescription) []ZoneModel {
+func buildZoneModels(zones []Zone, zonesDesc []ZoneDescription, all bool) []ZoneModel {
 	zonesDescMap := zonesDescMap(zonesDesc)
 	zonesModels := make([]ZoneModel, len(zones))
 	for i, z := range zones {
+		if zonesDescMap[i+1].Name == "" && !all {
+			continue
+		}
 		zonesModels[i].Id = i + 1
 		zonesModels[i].Name = zonesDescMap[i+1].Name
 

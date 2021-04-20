@@ -7,7 +7,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ZoneServiceClient interface {
-	GetZones(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ZoneResponse, error)
+	GetZones(ctx context.Context, in *GetZoneRequest, opts ...grpc.CallOption) (*GetZoneResponse, error)
 }
 
 type zoneServiceClient struct {
@@ -30,8 +29,8 @@ func NewZoneServiceClient(cc grpc.ClientConnInterface) ZoneServiceClient {
 	return &zoneServiceClient{cc}
 }
 
-func (c *zoneServiceClient) GetZones(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ZoneResponse, error) {
-	out := new(ZoneResponse)
+func (c *zoneServiceClient) GetZones(ctx context.Context, in *GetZoneRequest, opts ...grpc.CallOption) (*GetZoneResponse, error) {
+	out := new(GetZoneResponse)
 	err := c.cc.Invoke(ctx, "/ZoneService/GetZones", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -43,7 +42,7 @@ func (c *zoneServiceClient) GetZones(ctx context.Context, in *emptypb.Empty, opt
 // All implementations must embed UnimplementedZoneServiceServer
 // for forward compatibility
 type ZoneServiceServer interface {
-	GetZones(context.Context, *emptypb.Empty) (*ZoneResponse, error)
+	GetZones(context.Context, *GetZoneRequest) (*GetZoneResponse, error)
 	mustEmbedUnimplementedZoneServiceServer()
 }
 
@@ -51,7 +50,7 @@ type ZoneServiceServer interface {
 type UnimplementedZoneServiceServer struct {
 }
 
-func (UnimplementedZoneServiceServer) GetZones(context.Context, *emptypb.Empty) (*ZoneResponse, error) {
+func (UnimplementedZoneServiceServer) GetZones(context.Context, *GetZoneRequest) (*GetZoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetZones not implemented")
 }
 func (UnimplementedZoneServiceServer) mustEmbedUnimplementedZoneServiceServer() {}
@@ -68,7 +67,7 @@ func RegisterZoneServiceServer(s grpc.ServiceRegistrar, srv ZoneServiceServer) {
 }
 
 func _ZoneService_GetZones_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetZoneRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -80,7 +79,7 @@ func _ZoneService_GetZones_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/ZoneService/GetZones",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ZoneServiceServer).GetZones(ctx, req.(*emptypb.Empty))
+		return srv.(ZoneServiceServer).GetZones(ctx, req.(*GetZoneRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

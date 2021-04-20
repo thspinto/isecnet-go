@@ -14,7 +14,7 @@ import (
 // AlarmClient is the client interface
 type AlarmClient interface {
 	GetPartialStatus(ctx context.Context) (response *StatusResponse, err error)
-	GetZones(ctx context.Context) ([]ZoneModel, error)
+	GetZones(ctx context.Context, all bool) ([]ZoneModel, error)
 }
 
 // Client is the client for
@@ -65,6 +65,8 @@ func (c *Client) command(b []byte) (response []byte, err error) {
 		log.WithFields(log.Fields{
 			"err": err,
 		}).Error("Failed writing to stream")
+		c.conn.Close()
+		c.conn = nil
 		return
 	}
 
@@ -74,6 +76,8 @@ func (c *Client) command(b []byte) (response []byte, err error) {
 		log.WithFields(log.Fields{
 			"err": err,
 		}).Error("Failed reading response size")
+		c.conn.Close()
+		c.conn = nil
 		return
 	}
 

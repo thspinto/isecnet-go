@@ -2,14 +2,16 @@ syntax = "proto3";
 
 option go_package = "/;pb";
 
-import "google/protobuf/empty.proto";
-
 service ZoneService {
-  rpc GetZones(google.protobuf.Empty) returns (ZoneResponse) {}
+  rpc GetZones(GetZoneRequest) returns (GetZoneResponse) {}
 }
 
-message ZoneResponse {
-  repeated Zone zones = 4;
+message GetZoneResponse {
+  repeated Zone zones = 1;
+}
+
+message GetZoneRequest {
+  bool all = 1;
 }
 
 message Zone {
