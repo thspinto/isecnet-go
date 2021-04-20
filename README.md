@@ -50,8 +50,14 @@ INFO[0000] Connecting...                                 address="localhost:9009
 
 * `make test`: run all
 
-* `make mock-server`: starts the mock server
+* `make mock-alarm-central`: starts the mock server
 
+* `go run . server`: starts the gRPC server:
+
+```
+// Testing the API
+grpcurl -plaintext localhost:8080 ZoneService.GetZones
+```
 
 # References
 

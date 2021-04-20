@@ -25,12 +25,14 @@ func (g GRPCServer) GetZones(ctx context.Context, in *empty.Empty) (*pb.ZoneResp
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	response := make([]*pb.Zone, len(zones))
-
-	for i, r := range zones {
-		response[i].Id = r.Id
-		response[i].Name = r.Name
-		response[i].Status = r.Status
+	var response []*pb.Zone
+	for _, r := range zones {
+		response = append(response,
+			&pb.Zone{
+				Id:     r.Id,
+				Name:   r.Name,
+				Status: r.Status,
+			})
 	}
 	return &pb.ZoneResponse{Zones: response}, nil
 }

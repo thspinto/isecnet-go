@@ -7,7 +7,7 @@ lint:
 unit-test:
 	go test ./...
 
-.PHONY: mock-server
+.PHONY: mock-alarm-central
 mock-server:
 	$(MAKE) -C internal/mockAlarmCentral run
 

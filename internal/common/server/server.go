@@ -9,6 +9,7 @@ import (
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func init() {
@@ -30,6 +31,7 @@ func RunGRPCServer(host, port string, registerServer func(server *grpc.Server)) 
 		),
 	)
 	registerServer(grpcServer)
+	reflection.Register(grpcServer)
 
 	listen, err := net.Listen("tcp", addr)
 	if err != nil {

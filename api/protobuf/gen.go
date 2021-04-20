@@ -1,3 +1,3 @@
-//go:generate protoc --go_out=../pb_gen --go-grpc_out=../pb_gen -I . pb.proto
+//go:generate protoc --go_out=../pb --go-grpc_out=../pb -I . pb.proto
 
 package pb

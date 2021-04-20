@@ -32,7 +32,7 @@ func NewZoneServiceClient(cc grpc.ClientConnInterface) ZoneServiceClient {
 
 func (c *zoneServiceClient) GetZones(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ZoneResponse, error) {
 	out := new(ZoneResponse)
-	err := c.cc.Invoke(ctx, "/pb.ZoneService/GetZones", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ZoneService/GetZones", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func _ZoneService_GetZones_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.ZoneService/GetZones",
+		FullMethod: "/ZoneService/GetZones",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ZoneServiceServer).GetZones(ctx, req.(*emptypb.Empty))
@@ -89,7 +89,7 @@ func _ZoneService_GetZones_Handler(srv interface{}, ctx context.Context, dec fun
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ZoneService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.ZoneService",
+	ServiceName: "ZoneService",
 	HandlerType: (*ZoneServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
