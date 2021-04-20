@@ -92,6 +92,8 @@ func (c *Client) command(b []byte) (response []byte, err error) {
 		log.WithFields(log.Fields{
 			"err": err,
 		}).Error("Failed reading response")
+		c.conn.Close()
+		c.conn = nil
 		return
 	}
 

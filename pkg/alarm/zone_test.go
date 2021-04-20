@@ -44,6 +44,7 @@ func Test_buildZoneModelsAll(t *testing.T) {
 	}
 
 	models := buildZoneModels(zones, zoneDesc, true)
+	assert.Equal(t, len(models), 6)
 
 	assert.Equal(t,
 		ZoneModel{
@@ -128,7 +129,8 @@ func Test_buildZoneNameModels(t *testing.T) {
 		},
 	}
 
-	models := buildZoneModels(zones, zoneDesc, true)
+	models := buildZoneModels(zones, zoneDesc, false)
+	assert.Equal(t, len(models), 3)
 
 	assert.Equal(t,
 		ZoneModel{
@@ -152,5 +154,5 @@ func Test_buildZoneNameModels(t *testing.T) {
 			Name:   "four",
 			Status: "Tamper",
 		},
-		models[3])
+		models[2])
 }

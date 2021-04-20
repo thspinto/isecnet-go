@@ -40,32 +40,36 @@ func (c *Client) GetZones(ctx context.Context, all bool) ([]ZoneModel, error) {
 }
 
 func buildZoneModels(zones []Zone, zonesDesc []ZoneDescription, all bool) []ZoneModel {
+	var zoneModels []ZoneModel
 	zonesDescMap := zonesDescMap(zonesDesc)
-	zonesModels := make([]ZoneModel, len(zones))
 	for i, z := range zones {
 		if zonesDescMap[i+1].Name == "" && !all {
 			continue
 		}
-		zonesModels[i].Id = i + 1
-		zonesModels[i].Name = zonesDescMap[i+1].Name
+		model := ZoneModel{
+			Id:   i + 1,
+			Name: zonesDescMap[i+1].Name,
+		}
 
 		switch {
 		case z.Open:
-			zonesModels[i].Status = "Open"
+			model.Status = "Open"
 		case z.Anulated:
-			zonesModels[i].Status = "Anulated"
+			model.Status = "Anulated"
 		case z.LowBattery:
-			zonesModels[i].Status = "LowBattery"
+			model.Status = "LowBattery"
 		case z.Violated:
-			zonesModels[i].Status = "Violated"
+			model.Status = "Violated"
 		case z.ShortCircuit:
-			zonesModels[i].Status = "ShortCircuit"
+			model.Status = "ShortCircuit"
 		case z.Tamper:
-			zonesModels[i].Status = "Tamper"
+			model.Status = "Tamper"
 		}
+
+		zoneModels = append(zoneModels, model)
 	}
 
-	return zonesModels
+	return zoneModels
 }
 
 func zonesDescMap(zonesDesc []ZoneDescription) map[int]ZoneDescription {
