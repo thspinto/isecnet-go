@@ -1,0 +1,18 @@
+on:
+  release:
+    types: [created]
+
+jobs:
+  releases-matrix:
+    name: Release Go Binary
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goarch: ["armhf", "armv7", "aarch64", "amd64", "i386"]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: wangyoucao577/go-release-action@v1.17
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goarch: ${{ matrix.goarch }}
+        binary_name: "isecnet-go"
