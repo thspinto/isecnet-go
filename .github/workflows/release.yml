@@ -1,3 +1,5 @@
+name: Go Release
+
 on:
   release:
     types: [created]
@@ -8,11 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goarch: ["armhf", "armv7", "aarch64", "amd64", "i386"]
+        goos: [linux, windows, darwin]
+        goarch: ["arm", "arm64", "amd64"]
+        exclude:
+          - goarch: "arm"
+            goos: darwin
+          - goarch: "arm64"
+            goos: darwin
+          - goarch: "arm64"
+            goos: windows
     steps:
     - uses: actions/checkout@v2
     - uses: wangyoucao577/go-release-action@v1.17
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
         binary_name: "isecnet-go"
