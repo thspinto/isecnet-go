@@ -41,24 +41,24 @@ var zonesCmd = &cobra.Command{
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client := alarm.NewClient(viper.GetString("alarm_host"), viper.GetString("alarm_port"), viper.GetString("alarm_password"))
-		zones, err := client.GetZones(context.Background(), viper.GetBool("all"))
-		if err != nil {
-			log.Fatalln("Failed to get zone status: ", err)
-		}
 		if viper.GetBool("watch") {
-			watchStatus(client, zones)
+			watchStatus(client)
 		} else {
-			printZones(client, zones)
+			printZones(client)
 		}
 
 	},
 }
 
-func watchStatus(c alarm.AlarmClient, zones []alarm.ZoneModel) {
+func watchStatus(c alarm.AlarmClient) {
 	if err := ui.Init(); err != nil {
 		log.Fatalf("failed to initialize termui: %v", err)
 	}
 	defer ui.Close()
+	zones, err := c.GetZones(context.Background(), viper.GetBool("all"))
+	if err != nil {
+		log.Fatalln("Failed to get zone status: ", err)
+	}
 	updateUI(c, zones)
 
 	tick := time.Tick(2 * time.Second)
@@ -71,6 +71,10 @@ func watchStatus(c alarm.AlarmClient, zones []alarm.ZoneModel) {
 				return
 			}
 		case <-tick:
+			zones, err := c.GetZones(context.Background(), viper.GetBool("all"))
+			if err != nil {
+				log.Fatalln("Failed to get zone status: ", err)
+			}
 			updateUI(c, zones)
 		}
 	}
@@ -98,7 +102,12 @@ func updateUI(c alarm.AlarmClient, zones []alarm.ZoneModel) {
 	}
 }
 
-func printZones(c alarm.AlarmClient, zones []alarm.ZoneModel) {
+func printZones(c alarm.AlarmClient) {
+	zones, err := c.GetZones(context.Background(), viper.GetBool("all"))
+	if err != nil {
+		log.Fatalln("Failed to get zone status: ", err)
+	}
+
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Zone", "Name", "Status"})
 
