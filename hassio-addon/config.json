@@ -1,0 +1,15 @@
+{
+  "name": "Isecnet Alarm Central",
+  "version": "v0.1.1",
+  "slug": "hassio-isecnet",
+  "description": "Addon for Intelbras Alarm Centrals",
+  "arch": [
+    "armhf",
+    "aarch64",
+    "amd64"
+  ],
+  "startup": "application",
+  "boot": "auto",
+  "options": {},
+  "schema": {}
+}
