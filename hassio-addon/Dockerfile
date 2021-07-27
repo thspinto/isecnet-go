@@ -1,9 +1,11 @@
 ARG BUILD_FROM
-FROM $BUILD_FROM
 
+FROM $BUILD_FROM
+ARG BUILD_ARCH
+ARG BUILD_VERSION
+ARG ISECNET_GO_VERSION="v0.1.1"
 ENV LANG C.UTF-8
 
-# Copy data for add-on
-COPY run.sh /
-RUN chmod a+x /run.sh
-CMD [ "/run.sh" ]
+COPY ./*.sh .
+RUN ./download.sh $BUILD_ARCH $ISECNET_GO_VERSION
+CMD [ "./run.sh" ]
